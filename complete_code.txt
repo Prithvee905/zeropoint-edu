@@ -1,0 +1,1100 @@
+﻿// File: app/api/ai/route.ts
+import { NextResponse } from "next/server";
+import Groq from "groq-sdk";
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const message = body.message;
+    const chat = body.chat || [];
+    const context = body.context || {}
+    const weakTopics = context.weakTopics || []
+
+    // âœ… Debug API key
+    console.log("API KEY:", process.env.GROQ_API_KEY);
+
+    if (!process.env.GROQ_API_KEY) {
+      throw new Error("Missing GROQ_API_KEY in .env.local");
+    }
+
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
+    });
+
+    const messages: any[] = [
+      {
+        role: "system",
+        content: `
+You are Zeropoint AI Tutor.
+
+Student Context:
+- Subject: ${context.subject || "Not specified"}
+- Goal: ${context.goal || "Not specified"}
+- Study Hours/Day: ${context.hours || "Not specified"}
+- Weak Areas: ${weakTopics.length ? weakTopics.join(", ") : "None"}
+
+Instructions:
+- Explain simply
+- Use bullet points
+- Give examples
+- Focus more on weak areas
+- Relate answers to student's goal
+- Ask a follow-up question
+`,
+      },
+    ];
+
+    // âœ… Chat history
+    if (Array.isArray(chat)) {
+      for (const msg of chat) {
+        messages.push({
+          role: msg.role === "ai" ? "assistant" : "user",
+          content: msg.text || "",
+        });
+      }
+    }
+
+    // âœ… Current message
+    messages.push({
+      role: "user",
+      content: message,
+    });
+
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages,
+    });
+
+    const reply =
+      completion.choices?.[0]?.message?.content ||
+      "No response from AI.";
+
+    return NextResponse.json({ reply });
+
+  } catch (error: any) {
+    // ðŸ”¥ FULL ERROR LOG
+    console.error("AI ERROR FULL:", error);
+
+    return NextResponse.json({
+      reply: "Error contacting AI tutor.",
+      error: error?.message || "Unknown error",
+    });
+  }
+}
+
+// File: app/api/upload/route.ts
+import { NextResponse } from "next/server"
+import * as pdfParse from "pdf-parse"
+
+export async function POST(req: Request) {
+    try {
+        const formData = await req.formData()
+        const file = formData.get("file") as File
+
+        if (!file) {
+            return NextResponse.json({ error: "No file uploaded" })
+        }
+
+        const bytes = await file.arrayBuffer()
+        const buffer = Buffer.from(bytes)
+
+        const data = await pdfParse(buffer)
+
+        return NextResponse.json({
+            text: data.text
+        })
+
+    } catch (error: any) {
+        return NextResponse.json({
+            error: error.message || "Failed to process PDF"
+        })
+    }
+}
+
+
+// File: app/chat/page.tsx
+'use client'
+import { useState } from "react"
+import ReactMarkdown from "react-markdown";
+
+export default function ChatPage() {
+    const [message, setMessage] = useState("")
+    const [chat, setChat] = useState<any[]>([])
+    const [loading, setLoading] = useState(false)
+
+
+
+    const getUserContext = () => {
+        try {
+            const data = JSON.parse(localStorage.getItem("studyPlanInput") || "{}")
+            const weakTopics = JSON.parse(localStorage.getItem("weakTopics") || "[]")
+
+            return { ...data, weakTopics }
+        } catch {
+            return {}
+        }
+    }
+
+
+    const saveWeakTopic = (question: string) => {
+        try {
+            const weak = JSON.parse(localStorage.getItem("weakTopics") || "[]")
+
+            if (!weak.includes(question)) {
+                weak.push(question)
+                localStorage.setItem("weakTopics", JSON.stringify(weak))
+            }
+        } catch { }
+    }
+
+    const sendMessage = async () => {
+        if (!message.trim()) return
+
+        const userMessage = { role: "user", text: message }
+        const updatedChat = [...chat, userMessage]
+
+        const context = getUserContext()
+        setChat(updatedChat)
+        setMessage("")
+        setLoading(true)
+
+        try {
+            const res = await fetch("/api/ai", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message, chat: updatedChat, context }),
+            })
+
+            const data = await res.json()
+
+            const aiMessage = {
+                role: "ai",
+                text: data.reply || "No response"
+            }
+
+            setChat(prev => [...prev, aiMessage])
+            saveWeakTopic(message)
+
+        } catch (error) {
+            setChat(prev => [...prev, { role: "ai", text: "Error contacting AI tutor." }])
+        }
+
+        setLoading(false)
+    }
+
+    return (
+        <div className="max-w-3xl mx-auto text-white">
+            <h1 className="text-3xl font-bold mb-6">AI Tutor</h1>
+
+            <div className="space-y-4 mb-6">
+                {chat.map((msg, i) => (
+                    <div
+                        key={i}
+                        className={`p-3 rounded-lg max-w-[80%] ${msg.role === "user"
+                            ? "bg-purple-600 ml-auto text-white"
+                            : "bg-white text-black"
+                            }`}
+                    >
+                        {msg.role === "user" && msg.text}
+
+                        {msg.role === "ai" && (
+                            <div className="prose prose-sm max-w-none">
+                                <ReactMarkdown>{msg.text}</ReactMarkdown>
+                            </div>
+                        )}
+                    </div>
+                ))}
+
+                {loading && (
+                    <div className="bg-white text-black p-3 rounded-lg max-w-[80%]">
+                        AI is thinking...
+                    </div>
+                )}
+            </div>
+
+            <div className="flex gap-2">
+                <input
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Ask anything..."
+                    className="flex-1 p-3 rounded text-black"
+                />
+
+                <button
+                    onClick={sendMessage}
+                    className="bg-purple-600 px-5 rounded hover:bg-purple-700"
+                >
+                    Send
+                </button>
+            </div>
+        </div>
+    );
+}
+
+// File: app/components/AIBrainBackground.tsx
+'use client'
+
+import { Canvas, useFrame } from "@react-three/fiber"
+import { Points, PointMaterial } from "@react-three/drei"
+import { useRef, useMemo } from "react"
+import * as THREE from "three"
+
+function Particles() {
+    const ref = useRef<THREE.Points>(null!)
+
+    const positions = useMemo(() => {
+        const arr = new Float32Array(2500 * 3)
+
+        for (let i = 0; i < 2500; i++) {
+            arr[i * 3] = (Math.random() - 0.5) * 10
+            arr[i * 3 + 1] = (Math.random() - 0.5) * 10
+            arr[i * 3 + 2] = (Math.random() - 0.5) * 10
+        }
+
+        return arr
+    }, [])
+
+    useFrame((state, delta) => {
+        if (!ref.current) return
+
+        const { mouse } = state
+
+        // subtle continuous rotation
+        ref.current.rotation.y += delta * 0.03
+
+        // target rotation based on cursor
+        const targetX = mouse.y * 0.6
+        const targetY = mouse.x * 0.6
+
+        // smooth interpolation
+        ref.current.rotation.x += (targetX - ref.current.rotation.x) * 0.05
+        ref.current.rotation.y += (targetY - ref.current.rotation.y) * 0.05
+    })
+
+    return (
+        <Points ref={ref} positions={positions} stride={3}>
+            <PointMaterial
+                transparent
+                color="#7aa2ff"
+                size={0.04}
+                sizeAttenuation
+                depthWrite={false}
+            />
+        </Points>
+    )
+}
+
+export default function AIBrainBackground() {
+    return (
+        <Canvas
+            camera={{ position: [0, 0, 5] }}
+            style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%"
+            }}
+
+        >
+            <Particles />
+        </Canvas>
+    )
+}
+
+// File: app/components/AIChat.tsx
+"use client";
+
+import { useState } from "react";
+
+type Message = {
+    role: "user" | "assistant";
+    content: string;
+};
+
+export default function AIChat() {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [input, setInput] = useState<string>("");
+
+    const sendMessage = async () => {
+        if (!input.trim()) return;
+
+        const userMessage: Message = {
+            role: "user",
+            content: input,
+        };
+
+        setMessages((prev) => [...prev, userMessage]);
+
+        try {
+            const res = await fetch("/api/ai", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ message: input }),
+            });
+
+            const data = await res.json();
+
+            const aiMessage: Message = {
+                role: "assistant",
+                content: data.reply,
+            };
+
+            setMessages((prev) => [...prev, aiMessage]);
+        } catch (error) {
+            setMessages((prev) => [
+                ...prev,
+                { role: "assistant", content: "AI tutor failed to respond." },
+            ]);
+        }
+
+        setInput("");
+    };
+
+    return (
+        <div className="flex flex-col w-full max-w-3xl mx-auto mt-10">
+
+            {/* Chat Messages */}
+            <div className="space-y-4 mb-6">
+                {messages.map((msg, index) => (
+                    <div
+                        key={index}
+                        className={`p-3 rounded-lg max-w-xl ${msg.role === "user"
+                                ? "bg-purple-600 text-white ml-auto"
+                                : "bg-gray-200 text-black"
+                            }`}
+                    >
+                        {msg.content}
+                    </div>
+                ))}
+            </div>
+
+            {/* Input */}
+            <div className="flex gap-2">
+                <input
+                    type="text"
+                    placeholder="Ask anything..."
+                    className="flex-1 p-3 border rounded-lg bg-black text-white"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                />
+
+                <button
+                    onClick={sendMessage}
+                    className="bg-purple-600 px-6 py-3 rounded-lg text-white"
+                >
+                    Send
+                </button>
+            </div>
+
+        </div>
+    );
+}
+
+// File: app/components/FloatingAI.tsx
+'use client'
+
+import { useRouter } from "next/navigation"
+
+export default function FloatingAI() {
+
+    const router = useRouter()
+
+    return (
+        <button
+            onClick={() => router.push("/chat")}
+            className="fixed bottom-8 right-8 bg-purple-600 hover:bg-purple-700 text-white w-16 h-16 rounded-full shadow-lg text-xl flex items-center justify-center transition"
+        >
+            AI
+        </button>
+    )
+}
+
+// File: app/components/Sidebar.tsx
+'use client'
+
+import Link from "next/link"
+
+export default function Sidebar() {
+    return (
+        <div className="w-64 h-screen bg-black text-white p-6 border-r border-gray-800">
+
+            <h1 className="text-2xl font-bold mb-10">
+                Zeropoint
+            </h1>
+
+            <nav className="flex flex-col gap-4 text-gray-300">
+
+                <Link href="/dashboard" className="hover:text-white">
+                    Dashboard
+                </Link>
+
+                <Link href="/chat" className="hover:text-white">
+                    AI Chat
+                </Link>
+
+                <Link href="/quiz" className="hover:text-white">
+                    Quiz
+                </Link>
+
+                <Link href="/progress" className="hover:text-white">
+                    Progress
+                </Link>
+
+                <Link href="/upload" className="hover:text-white">
+                    Upload PDF
+                </Link>
+
+            </nav>
+
+        </div>
+    )
+}
+
+// File: app/components/Streak.tsx
+'use client'
+
+import { useEffect, useState } from "react"
+
+export default function Streak() {
+
+    const [streak, setStreak] = useState(0)
+
+    useEffect(() => {
+
+        const stored = Number(localStorage.getItem("studyStreak") || 0)
+
+        setStreak(stored)
+
+    }, [])
+
+    return (
+
+        <div className="bg-white text-black p-6 rounded-xl shadow">
+
+            <h2 className="text-xl font-semibold mb-3">
+                Study Streak
+            </h2>
+
+            <p className="text-lg font-bold">
+                ðŸ”¥ {streak} Day Study Streak
+            </p>
+
+            <p className="text-sm text-gray-600 mt-2">
+                Complete today's tasks to maintain your streak
+            </p>
+
+        </div>
+
+    )
+}
+
+// File: app/components/TodayTasks.tsx
+'use client'
+
+import { useState, useEffect } from "react"
+
+export default function TodayTasks() {
+
+    const [tasks, setTasks] = useState<any[]>([])
+
+    useEffect(() => {
+
+        const storedPlan = JSON.parse(localStorage.getItem("studyPlan") || "[]")
+
+        const formatted = storedPlan.map((task: string, i: number) => ({
+            id: i,
+            text: task,
+            done: false
+        }))
+
+        setTasks(formatted)
+
+    }, [])
+
+
+    const updateStreak = () => {
+
+        const today = new Date().toDateString()
+
+        const lastStudy = localStorage.getItem("lastStudyDate")
+        let streak = Number(localStorage.getItem("studyStreak") || 0)
+
+        if (lastStudy) {
+
+            const yesterday = new Date()
+            yesterday.setDate(yesterday.getDate() - 1)
+
+            if (lastStudy === yesterday.toDateString()) {
+                streak += 1
+            }
+
+            else if (lastStudy !== today) {
+                streak = 1
+            }
+
+        }
+
+        else {
+            streak = 1
+        }
+
+        localStorage.setItem("studyStreak", String(streak))
+        localStorage.setItem("lastStudyDate", today)
+
+    }
+
+
+    const toggleTask = (id: number) => {
+
+        const updated = tasks.map(task =>
+            task.id === id ? { ...task, done: !task.done } : task
+        )
+
+        setTasks(updated)
+
+        const allDone = updated.every(t => t.done)
+
+        if (allDone) {
+            updateStreak()
+        }
+
+    }
+
+
+    return (
+
+        <div className="bg-white text-black p-6 rounded-xl shadow">
+
+            <h2 className="text-xl font-semibold mb-4">
+                Today's Study Plan
+            </h2>
+
+            <ul className="space-y-3">
+
+                {tasks.map(task => (
+
+                    <li
+                        key={task.id}
+                        onClick={() => toggleTask(task.id)}
+                        className={`p-3 rounded border cursor-pointer transition
+            ${task.done ? "bg-green-100 line-through" : "bg-gray-50 hover:bg-gray-100"}`}
+                    >
+                        {task.text}
+                    </li>
+
+                ))}
+
+            </ul>
+
+        </div>
+
+    )
+}
+
+// File: app/dashboard/page.tsx
+'use client'
+
+import TodayTasks from "../components/TodayTasks"
+import Streak from "../components/Streak"
+import Link from "next/link"
+
+export default function Dashboard() {
+    return (
+
+        <div className="space-y-8">
+
+            {/* Dashboard Title */}
+            <div>
+
+                <h1 className="text-3xl font-bold text-white">
+                    Dashboard
+                </h1>
+
+                <Link
+                    href="/onboarding"
+                    className="inline-block bg-purple-600 text-white px-5 py-2 rounded-lg mt-4 hover:bg-purple-700 transition"
+                >
+                    Create AI Study Plan
+                </Link>
+
+            </div>
+
+            {/* Today's Study Tasks */}
+            <TodayTasks />
+
+            {/* Study Streak */}
+            <Streak />
+
+            {/* Feature Cards */}
+            <div className="grid grid-cols-3 gap-6">
+
+                <Link href="/chat">
+                    <div className="bg-white text-black p-6 rounded-xl shadow cursor-pointer hover:shadow-lg transition">
+
+                        <h2 className="text-lg font-semibold mb-2">
+                            AI Tutor
+                        </h2>
+
+                        <p className="text-gray-600">
+                            Ask questions and get explanations
+                        </p>
+
+                    </div>
+                </Link>
+
+                <Link href="/quiz">
+                    <div className="bg-white text-black p-6 rounded-xl shadow cursor-pointer hover:shadow-lg transition">
+
+                        <h2 className="text-lg font-semibold mb-2">
+                            Practice Quiz
+                        </h2>
+
+                        <p className="text-gray-600">
+                            Test your knowledge
+                        </p>
+
+                    </div>
+                </Link>
+
+                <Link href="/progress">
+                    <div className="bg-white text-black p-6 rounded-xl shadow cursor-pointer hover:shadow-lg transition">
+
+                        <h2 className="text-lg font-semibold mb-2">
+                            Progress
+                        </h2>
+
+                        <p className="text-gray-600">
+                            Track your learning progress
+                        </p>
+
+                    </div>
+                </Link>
+
+            </div>
+
+            {/* Progress Bar */}
+            <div className="bg-white text-black p-6 rounded-xl shadow">
+
+                <h2 className="text-xl font-semibold mb-3">
+                    Today's Progress
+                </h2>
+
+                <div className="w-full bg-gray-200 h-4 rounded">
+
+                    <div className="bg-black h-4 rounded w-[60%]"></div>
+
+                </div>
+
+                <p className="text-sm text-gray-600 mt-2">
+                    60% completed today
+                </p>
+
+            </div>
+
+        </div>
+
+    )
+}
+
+// File: app/generate-plan/page.tsx
+'use client'
+
+import { useEffect, useState } from "react"
+import Link from "next/link"
+
+export default function GeneratePlan() {
+
+    const [plan, setPlan] = useState<string[]>([])
+
+    useEffect(() => {
+
+        const data = JSON.parse(localStorage.getItem("studyPlanInput") || "{}")
+
+        const generatedPlan = [
+            `Learn fundamentals of ${data.subject}`,
+            "Solve 5 practice problems",
+            "Take a quick quiz",
+            "Review mistakes"
+        ]
+
+        setPlan(generatedPlan)
+
+        localStorage.setItem("studyPlan", JSON.stringify(generatedPlan))
+
+    }, [])
+
+    return (
+
+        <div className="max-w-xl mx-auto text-white space-y-6">
+
+            <h1 className="text-4xl font-bold text-center">
+                Your AI Study Plan
+            </h1>
+
+            <div className="space-y-3">
+
+                {plan.map((task, i) => (
+                    <div
+                        key={i}
+                        className="bg-white text-black p-4 rounded-lg shadow"
+                    >
+                        Day {i + 1} â€” {task}
+                    </div>
+                ))}
+
+            </div>
+
+            <Link
+                href="/dashboard"
+                className="block text-center bg-purple-600 py-3 rounded-lg mt-6 hover:bg-purple-700 transition"
+            >
+                Start Studying
+            </Link>
+
+        </div>
+    )
+}
+
+// File: app/login/page.tsx
+'use client'
+
+import { useRouter } from "next/navigation"
+
+export default function LoginPage() {
+
+    const router = useRouter()
+
+    const handleLogin = () => {
+        router.push("/dashboard")
+    }
+
+    return (
+        <main className="flex min-h-screen items-center justify-center">
+
+            <div className="bg-white text-black p-8 rounded-xl shadow-md w-96">
+
+                <h1 className="text-2xl font-bold mb-6 text-center">
+                    Zeropoint Login
+                </h1>
+
+                <input
+                    type="email"
+                    placeholder="Email"
+                    className="w-full p-3 mb-4 border rounded-lg"
+                />
+
+                <input
+                    type="password"
+                    placeholder="Password"
+                    className="w-full p-3 mb-4 border rounded-lg"
+                />
+
+                <button
+                    onClick={handleLogin}
+                    className="w-full bg-black text-white p-3 rounded-lg"
+                >
+                    Login
+                </button>
+
+            </div>
+
+        </main>
+    )
+}
+
+// File: app/onboarding/page.tsx
+'use client'
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+
+export default function Onboarding() {
+
+    const router = useRouter()
+
+    const [subject, setSubject] = useState("")
+    const [goal, setGoal] = useState("")
+    const [examDate, setExamDate] = useState("")
+    const [hours, setHours] = useState("")
+
+    const handleSubmit = () => {
+        const data = { subject, goal, examDate, hours }
+
+        localStorage.setItem("studyPlanInput", JSON.stringify(data))
+
+        router.push("/generate-plan")
+    }
+
+    return (
+
+        <div className="max-w-xl mx-auto text-white space-y-6">
+
+            <h1 className="text-4xl font-bold text-center mb-8">
+                Create Your Study Plan
+            </h1>
+
+            {/* Subject */}
+            <div>
+                <label className="block mb-2 text-sm">Subject</label>
+
+                <input
+                    placeholder="DSA, Math, Physics"
+                    className="w-full p-3 rounded-lg bg-white text-black border"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                />
+            </div>
+
+            {/* Goal */}
+            <div>
+                <label className="block mb-2 text-sm">Goal</label>
+
+                <input
+                    placeholder="Crack coding interview"
+                    className="w-full p-3 rounded-lg bg-white text-black border"
+                    value={goal}
+                    onChange={(e) => setGoal(e.target.value)}
+                />
+            </div>
+
+            {/* Exam Date */}
+            <div>
+                <label className="block mb-2 text-sm">Exam Date</label>
+
+                <input
+                    type="date"
+                    className="w-full p-3 rounded-lg bg-white text-black border"
+                    value={examDate}
+                    onChange={(e) => setExamDate(e.target.value)}
+                />
+            </div>
+
+            {/* Study Hours */}
+            <div>
+                <label className="block mb-2 text-sm">Study Hours per Day</label>
+
+                <input
+                    placeholder="2"
+                    className="w-full p-3 rounded-lg bg-white text-black border"
+                    value={hours}
+                    onChange={(e) => setHours(e.target.value)}
+                />
+            </div>
+
+            <button
+                onClick={handleSubmit}
+                className="w-full bg-purple-600 py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+            >
+                Generate AI Plan
+            </button>
+
+        </div>
+    )
+}
+
+// File: app/progress/page.tsx
+export default function ProgressPage() {
+    return (
+        <div>
+
+            <h1 className="text-3xl font-bold mb-6">
+                Your Progress
+            </h1>
+
+            <div className="bg-white p-6 rounded-xl shadow text-black">
+
+                <p className="mb-4">
+                    You have completed 20% of your roadmap
+                </p>
+
+                <div className="w-full bg-gray-200 h-4 rounded">
+                    <div className="bg-black h-4 rounded w-1/5"></div>
+                </div>
+
+            </div>
+
+        </div>
+    )
+}
+
+// File: app/quiz/page.tsx
+export default function Quiz() {
+    return (
+        <div>
+            <h1>Quiz</h1>
+        </div>
+    );
+}
+
+
+// File: app/upload/page.tsx
+'use client'
+import { useState } from "react"
+
+export default function UploadPage() {
+    const [file, setFile] = useState<File | null>(null)
+    const [loading, setLoading] = useState(false)
+    const [text, setText] = useState("")
+
+    const handleUpload = async () => {
+        if (!file) return
+
+        const formData = new FormData()
+        formData.append("file", file)
+
+        setLoading(true)
+
+        try {
+            const res = await fetch("/api/upload", {
+                method: "POST",
+                body: formData
+            })
+
+            const data = await res.json()
+            setText(data.text || "")
+        } catch {}
+
+        setLoading(false)
+    }
+
+    return (
+        <div className="max-w-2xl mx-auto text-white">
+            <h1 className="text-3xl font-bold mb-6">Upload PDF</h1>
+
+            <input
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                className="mb-4"
+            />
+
+            <button
+                onClick={handleUpload}
+                className="bg-purple-600 px-5 py-2 rounded"
+            >
+                {loading ? "Processing..." : "Upload"}
+            </button>
+
+            {text && (
+                <div className="mt-6 bg-white text-black p-4 rounded max-h-[400px] overflow-y-auto">
+                    {text}
+                </div>
+            )}
+        </div>
+    )
+}
+
+
+// File: app/globals.css
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+// File: app/layout.tsx
+import "./globals.css"
+import Sidebar from "./components/Sidebar"
+import FloatingAI from "./components/FloatingAI"
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body className="bg-black text-white">
+
+        <div className="flex min-h-screen relative overflow-hidden">
+
+          {/* Stripe-style gradient background */}
+          <div className="absolute inset-0 -z-10">
+
+            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-600 opacity-20 blur-3xl rounded-full"></div>
+
+            <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-500 opacity-20 blur-3xl rounded-full"></div>
+
+          </div>
+
+          {/* Sidebar */}
+          <Sidebar />
+
+          {/* Page Content */}
+          <main className="flex-1 p-10">
+            {children}
+          </main>
+
+        </div>
+
+        {/* Floating AI Button */}
+        <FloatingAI />
+
+      </body>
+    </html>
+  )
+}
+
+// File: app/page.tsx
+'use client'
+
+import AIBrainBackground from "./components/AIBrainBackground"
+import Link from "next/link"
+
+export default function Home() {
+  return (
+    <div className="relative h-screen w-full overflow-hidden">
+
+      {/* animated background */}
+      <AIBrainBackground />
+
+      {/* UI content */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
+
+        <h1 className="text-5xl font-bold mb-6">
+          Zeropoint AI Study System
+        </h1>
+
+        <p className="text-xl mb-6">
+          Your daily AI powered study plan
+        </p>
+
+        <Link
+          href="/dashboard"
+          className="bg-white text-black px-6 py-3 rounded-lg"
+        >
+          Start Studying
+        </Link>
+
+      </div>
+
+    </div>
+  )
+}
+
+
