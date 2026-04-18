@@ -1,40 +1,33 @@
 import "./globals.css"
 import Sidebar from "./components/Sidebar"
-import FloatingAI from "./components/FloatingAI"
+import NavProgress from "./components/NavProgress"
+import PageTransition from "./components/PageTransition"
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export const metadata = {
+  title: "Zeropoint — AI Study System",
+  description: "Transform any syllabus or goal into a complete, structured learning experience.",
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-black text-white">
-
-        <div className="flex min-h-screen relative overflow-hidden">
-
-          {/* Stripe-style gradient background */}
-          <div className="absolute inset-0 -z-10">
-
-            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-600 opacity-20 blur-3xl rounded-full"></div>
-
-            <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-500 opacity-20 blur-3xl rounded-full"></div>
-
-          </div>
-
-          {/* Sidebar */}
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      </head>
+      <body style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+        <NavProgress />
+        <div style={{ display: "flex", minHeight: "100vh" }}>
           <Sidebar />
-
-          {/* Page Content */}
-          <main className="flex-1 p-10">
-            {children}
+          <main style={{ flex: 1, overflowY: "auto", padding: "40px 48px 80px" }}>
+            <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+              <PageTransition>
+                {children}
+              </PageTransition>
+            </div>
           </main>
-
         </div>
-
-        {/* Floating AI Button */}
-        <FloatingAI />
-
       </body>
     </html>
   )

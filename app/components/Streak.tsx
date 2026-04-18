@@ -1,36 +1,42 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function Streak() {
+  const [streak, setStreak] = useState(0)
+  useEffect(() => { setStreak(Number(localStorage.getItem("studyStreak") || 0)) }, [])
 
-    const [streak, setStreak] = useState(0)
+  return (
+    <div className="card" style={{ padding: "20px" }}>
+      <div style={{ fontSize: "11px", fontWeight: "600", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "14px" }}>Study Streak</div>
 
-    useEffect(() => {
-
-        const stored = Number(localStorage.getItem("studyStreak") || 0)
-
-        setStreak(stored)
-
-    }, [])
-
-    return (
-
-        <div className="bg-white text-black p-6 rounded-xl shadow">
-
-            <h2 className="text-xl font-semibold mb-3">
-                Study Streak
-            </h2>
-
-            <p className="text-lg font-bold">
-                🔥 {streak} Day Study Streak
-            </p>
-
-            <p className="text-sm text-gray-600 mt-2">
-                Complete today's tasks to maintain your streak
-            </p>
-
+      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
+        <div>
+          <span style={{ fontSize: "2.5rem", fontWeight: "700", color: streak > 0 ? "#f0f0f4" : "#3f3f48", letterSpacing: "-0.04em", lineHeight: 1 }}>
+            {streak}
+          </span>
+          <span style={{ fontSize: "14px", color: "#52525e", marginLeft: "6px" }}>days</span>
         </div>
 
-    )
+        {/* Bars */}
+        <div style={{ display: "flex", gap: "4px", alignItems: "flex-end" }}>
+          {Array.from({ length: 7 }).map((_, i) => {
+            const lit = i < Math.min(streak, 7)
+            return (
+              <div key={i} style={{
+                width: "6px", borderRadius: "3px",
+                height: `${16 + i * 4}px`,
+                background: lit ? `rgba(167,139,250,${0.4 + i * 0.08})` : "rgba(255,255,255,0.05)",
+                transition: "background 0.3s",
+              }} />
+            )
+          })}
+        </div>
+      </div>
+
+      <p style={{ fontSize: "12px", color: "#52525e", marginTop: "12px" }}>
+        {streak === 0 ? "Start studying to build your streak." : streak >= 7 ? "🔥 7-day streak achieved!" : `${7 - streak} more day${7 - streak !== 1 ? "s" : ""} to a 7-day streak.`}
+      </p>
+    </div>
+  )
 }

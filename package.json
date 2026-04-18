@@ -11,6 +11,8 @@
   "dependencies": {
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
+    "@supabase/supabase-js": "^2.103.3",
+    "@tailwindcss/typography": "^0.5.19",
     "ai": "^6.0.116",
     "autoprefixer": "^10.4.27",
     "framer-motion": "^12.35.0",
@@ -18,7 +20,8 @@
     "next": "16.1.6",
     "open": "^11.0.0",
     "openai": "^6.27.0",
-    "pdf-parse": "^2.4.5",
+    "pdf2json": "^4.0.3",
+    "pdfkit": "^0.18.0",
     "postcss": "^8.5.8",
     "react": "19.2.3",
     "react-dom": "19.2.3",
