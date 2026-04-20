@@ -34,28 +34,17 @@ export default function ProgressPage() {
       return { ...t, quizScore: x?.score ?? null, quizTotal: x?.total_questions ?? null, weak: x?.weak_concepts ?? [], completed_at: x?.completed_at }
     }))
 
-    // Calculate real Engagement (Activity per day of the week)
-    const eng = [0, 0, 0, 0, 0, 0, 0] // M, T, W, T, F, S, S
-    const today = new Date()
-    const last7Days = Array.from({ length: 7 }).map((_, i) => {
-        const d = new Date()
-        d.setDate(today.getDate() - i)
-        return d.toISOString().split('T')[0]
-    })
-
+    const eng = [0, 0, 0, 0, 0, 0, 0]
     enriched.forEach(t => {
         if (t.status === 'completed' || t.quizScore !== null) {
-            const date = new Date(t.updated_at).toISOString().split('T')[0]
-            const dayIdx = new Date(t.updated_at).getDay() // 0 is Sunday, 1 is Monday
+            const dayIdx = new Date(t.updated_at).getDay()
             const mappedIdx = dayIdx === 0 ? 6 : dayIdx - 1
             eng[mappedIdx] += 1
         }
     })
     
-    // Normalize to percentages (max 5 topics per day for visualization)
     const normalizedEng = eng.map(v => Math.min((v / 5) * 100, 100))
     setEngagement(normalizedEng)
-
     setTopics(enriched); setLoading(false)
   }
 
@@ -83,15 +72,15 @@ export default function ProgressPage() {
 
       {/* Hero Header */}
       <div style={{ borderBottom: "1px solid var(--border)", paddingBottom: "32px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-            <div>
-                <span className="badge badge-purple" style={{ marginBottom: "12px" }}>Performance Engine</span>
-                <h1 style={{ fontSize: "2.5rem", fontWeight: "900", letterSpacing: "-0.04em", marginBottom: "4px" }}>Insights</h1>
-                <p style={{ fontSize: "14px", color: "#6b6b78" }}>Analyzing your path: <strong style={{ color: "#a78bfa" }}>{rm.subject}</strong></p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: "24px" }} className="mobile-stack">
+            <div style={{ flex: 1 }}>
+                <span className="badge badge-purple" style={{ marginBottom: "12px", fontSize: "10px" }}>Performance Engine</span>
+                <h1 style={{ fontSize: "clamp(2rem, 5vw, 2.5rem)", fontWeight: "900", letterSpacing: "-0.04em", marginBottom: "6px" }}>Insights</h1>
+                <p style={{ fontSize: "14px", color: "#6b6b78", fontWeight: "500" }}>Analyzing: <strong style={{ color: "#a78bfa" }}>{rm.subject}</strong></p>
             </div>
-            <div style={{ textAlign: "right" }}>
-                <span style={{ fontSize: "11px", fontWeight: "800", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.1em" }}>Global Streak</span>
-                <div style={{ fontSize: "24px", fontWeight: "900", color: "#fff" }}>{streak > 0 ? "🔥" : "💤"} {streak} Days</div>
+            <div style={{ textAlign: "right" }} className="mobile-full-width-text">
+                <span style={{ fontSize: "11px", fontWeight: "900", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.15em" }}>Current Streak</span>
+                <div style={{ fontSize: "24px", fontWeight: "900", color: "#fff", marginTop: "4px" }}>{streak > 0 ? "🔥" : "💤"} {streak} Days</div>
             </div>
         </div>
       </div>
@@ -102,43 +91,36 @@ export default function ProgressPage() {
         {/* Left Column: Visual Charts & Topics */}
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
             
-            {/* Completion Chart (Visual Artifact) */}
-            <div className="card" style={{ padding: "32px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "24px" }}>
-                    <div>
-                        <h2 style={{ fontSize: "11px", fontWeight: "800", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "10px" }}>Overall Progress</h2>
-                        <p style={{ fontSize: "2.5rem", fontWeight: "900", color: "#fff", letterSpacing: "-0.04em" }}>{pct}<span style={{ fontSize: "1.5rem", color: "#3f3f48" }}>%</span></p>
-                    </div>
+            {/* Completion Chart */}
+            <div className="card" style={{ padding: "clamp(20px, 4vw, 32px)" }}>
+                <div>
+                    <h2 style={{ fontSize: "11px", fontWeight: "900", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "12px" }}>Overall Progress</h2>
+                    <p style={{ fontSize: "clamp(2rem, 8vw, 3.2rem)", fontWeight: "900", color: "#fff", letterSpacing: "-0.04em", lineHeight: "1" }}>{pct}<span style={{ fontSize: "1.5rem", color: "#3f3f48" }}>%</span></p>
                 </div>
                 
-                {/* Horizontal Bar Visual */}
-                <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                    <div style={{ height: "48px", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.04)", overflow: "hidden", position: "relative" }}>
-                        <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: `${pct}%`, background: "linear-gradient(90deg, #7c3aed, #06b6d4)", boxShadow: "0 0 30px rgba(124,58,237,0.3)", borderRadius: "0 12px 12px 0", transition: "width 1s ease-out" }} />
+                <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "24px" }}>
+                    <div style={{ height: "40px", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden", position: "relative" }}>
+                        <div style={{ position: "absolute", top: 0, left: 0, height: "100%", width: `${pct}%`, background: "linear-gradient(90deg, #7c3aed, #06b6d4)", boxShadow: "0 0 30px rgba(124,58,237,0.3)", borderRadius: "0 12px 12px 0", transition: "width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)" }} />
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", fontWeight: "700", color: "#3f3f48", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-                        <span>Baseline</span>
-                        <span>{comp} / {topics.length} Segments Complete</span>
-                        <span>Target: 100%</span>
-                    </div>
+                    <p style={{ fontSize: "11px", fontWeight: "800", color: "#52525e", textTransform: "uppercase", textAlign: "center" }}>
+                        {comp} of {topics.length} Segments Mastered
+                    </p>
                 </div>
             </div>
 
-            {/* Weekly Activity (Visual Bar Chart) */}
-            <div className="card" style={{ padding: "28px" }}>
-                <h2 style={{ fontSize: "11px", fontWeight: "800", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "24px" }}>Engagement Level</h2>
-                <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", height: "120px", padding: "0 10px" }}>
+            {/* Weekly Activity */}
+            <div className="card" style={{ padding: "clamp(20px, 4vw, 24px)" }}>
+                <h2 style={{ fontSize: "11px", fontWeight: "900", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "28px" }}>Weekly Engagement</h2>
+                <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", height: "100px", gap: "8px" }}>
                     {engagement.map((h, i) => (
-                        <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", flex: 1 }}>
+                        <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", flex: 1 }}>
                             <div style={{ 
-                                width: "20px", 
-                                height: `${Math.max(h, 5)}%`, 
-                                background: h > 0 ? "linear-gradient(180deg, #a78bfa, #7c3aed)" : "rgba(255,255,255,0.05)", 
-                                borderRadius: "6px", 
-                                transition: "all 0.6s cubic-bezier(0.16,1,0.3,1)",
-                                boxShadow: h > 0 ? "0 0 15px rgba(124,58,237,0.3)" : "none"
+                                width: "100%", maxWidth: "16px",
+                                height: `${Math.max(h, 6)}%`, 
+                                background: h > 0 ? "linear-gradient(180deg, #a78bfa, #7c3aed)" : "rgba(255,255,255,0.04)", 
+                                borderRadius: "4px", transition: "all 1s cubic-bezier(0.16, 1, 0.3, 1)",
                             }} />
-                            <span style={{ fontSize: "10px", color: h > 0 ? "#fff" : "#3f3f48", fontWeight: "800" }}>{['M', 'T', 'W', 'T', 'F', 'S', 'S'][i]}</span>
+                            <span style={{ fontSize: "10px", color: h > 0 ? "#fff" : "#52525e", fontWeight: "900" }}>{['M', 'T', 'W', 'T', 'F', 'S', 'S'][i]}</span>
                         </div>
                     ))}
                 </div>
@@ -146,22 +128,22 @@ export default function ProgressPage() {
 
             {/* Mastery Feed */}
             <div>
-                <h2 style={{ fontSize: "11px", fontWeight: "800", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "16px" }}>Learning Feed</h2>
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <p style={{ fontSize: "11px", fontWeight: "900", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "16px" }}>Learning Feed</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                     {topics.filter(t => t.status !== 'pending').length === 0 ? (
                         <p style={{ fontSize: "13px", color: "#3f3f48", textAlign: "center", padding: "20px" }}>No activity recorded yet for this plan.</p>
                     ) : (
                         topics.filter(t => t.status !== 'pending').map(t => (
-                            <div key={t.id} className="card" style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: "16px" }}>
-                                <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: t.status === 'completed' ? '#4ade80' : '#7c3aed' }} />
-                                <div style={{ flex: 1 }}>
-                                    <p style={{ fontSize: "13px", fontWeight: "700", color: "#fff" }}>{t.title}</p>
-                                    <p style={{ fontSize: "11px", color: "#52525e" }}>Day {t.day_number} • {t.status === 'completed' ? 'Mastery Verified' : 'In Discussion'}</p>
+                            <div key={t.id} className="card" style={{ padding: "16px", display: "flex", alignItems: "center", gap: "16px", background: "rgba(255,255,255,0.01)" }}>
+                                <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: t.status === 'completed' ? '#4ade80' : '#7c3aed', flexShrink: 0 }} />
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                    <p style={{ fontSize: "14px", fontWeight: "700", color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.title}</p>
+                                    <p style={{ fontSize: "11px", color: "#52525e", fontWeight: "500" }}>Day {t.day_number} • {t.status === 'completed' ? 'Mastered' : 'Active'}</p>
                                 </div>
                                 {t.quizScore !== null && (
-                                    <div style={{ textAlign: "right" }}>
-                                        <p style={{ fontSize: "14px", fontWeight: "800", color: t.quizScore / t.quizTotal! > 0.8 ? '#4ade80' : '#fbbf24' }}>{t.quizScore}/{t.quizTotal}</p>
-                                        <p style={{ fontSize: "9px", color: "#3f3f48", textTransform: "uppercase", fontWeight: "900" }}>Score</p>
+                                    <div style={{ textAlign: "right", flexShrink: 0 }}>
+                                        <p style={{ fontSize: "15px", fontWeight: "900", color: t.quizScore / t.quizTotal! > 0.8 ? '#4ade80' : '#fbbf24' }}>{t.quizScore}/{t.quizTotal}</p>
+                                        <p style={{ fontSize: "9px", color: "#52525e", textTransform: "uppercase", fontWeight: "900" }}>Score</p>
                                     </div>
                                 )}
                             </div>
@@ -176,51 +158,46 @@ export default function ProgressPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
             
             {/* Weak Areas Indicator */}
-            <div className="card" style={{ padding: "28px", border: allWeak.length > 0 ? "1px solid rgba(248,113,113,0.2)" : "1px solid var(--border)" }}>
-                <h2 style={{ fontSize: "11px", fontWeight: "800", color: allWeak.length > 0 ? "#f87171" : "#52525e", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "16px" }}>Weak Area Alerts</h2>
+            <div className="card" style={{ padding: "24px", border: allWeak.length > 0 ? "1px solid rgba(248,113,113,0.3)" : "1px solid var(--border)" }}>
+                <h2 style={{ fontSize: "11px", fontWeight: "900", color: allWeak.length > 0 ? "#f87171" : "#52525e", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "16px" }}>Weak Area Alerts</h2>
                 
                 {allWeak.length === 0 ? (
-                    <div style={{ padding: "20px 0", textAlign: "center" }}>
-                        <p style={{ fontSize: "13px", color: "#3f3f48" }}>No structural weaknesses identified in your recent quizzes. Keep it up!</p>
-                    </div>
+                    <p style={{ fontSize: "13px", color: "#6b6b78", textAlign: "center", padding: "10px 0" }}>No structural weaknesses identified.</p>
                 ) : (
                     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                        <p style={{ fontSize: "13px", color: "#8b8b99", marginBottom: "6px", lineHeight: "1.5" }}>Our AI detected difficulties in these specific areas. We've prioritized them in your Tutor Hub.</p>
                         {allWeak.map((w, i) => (
-                            <div key={i} style={{ padding: "12px 16px", borderRadius: "10px", background: "rgba(248,113,113,0.04)", border: "1px solid rgba(248,113,113,0.1)", display: "flex", alignItems: "center", gap: "12px" }}>
-                                <span style={{ color: "#f87171" }}>⚠️</span>
-                                <span style={{ fontSize: "13px", fontWeight: "600", color: "#fca5a5" }}>{w}</span>
+                            <div key={i} style={{ padding: "12px 14px", borderRadius: "10px", background: "rgba(248,113,113,0.06)", border: "1px solid rgba(248,113,113,0.1)", display: "flex", alignItems: "center", gap: "12px" }}>
+                                <span style={{ color: "#f87171", fontSize: "14px" }}>⚠️</span>
+                                <span style={{ fontSize: "13px", fontWeight: "700", color: "#fca5a5" }}>{w}</span>
                             </div>
                         ))}
-                        <Link href="/chat" style={{ marginTop: "12px", textAlign: "center", fontSize: "12px", color: "#7c3aed", textDecoration: "none", fontWeight: "700" }}>Resolve with AI Tutor →</Link>
+                        <Link href="/chat" style={{ marginTop: "12px", textAlign: "center", fontSize: "12px", color: "#a78bfa", textDecoration: "none", fontWeight: "800" }}>Consult AI Tutor →</Link>
                     </div>
                 )}
             </div>
 
-            {/* Achievement Badge (Next Objective) */}
-            <div className="card" style={{ padding: "28px", background: "rgba(124,58,237,0.05)" }}>
-                <h2 style={{ fontSize: "11px", fontWeight: "800", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: "20px" }}>Next Objective</h2>
+            {/* Next Objective Card */}
+            <div className="card" style={{ padding: "24px", background: "rgba(124,58,237,0.04)" }}>
+                <h2 style={{ fontSize: "11px", fontWeight: "900", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "20px" }}>Active Milestone</h2>
                 <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-                    <div style={{ width: "50px", height: "50px", borderRadius: "16px", background: "rgba(124,58,237,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "24px" }}>🎖️</div>
+                    <div style={{ width: "48px", height: "48px", borderRadius: "14px", background: "rgba(124,58,237,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "22px" }}>🏅</div>
                     <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: "14px", fontWeight: "800", color: "#fff" }}>Reach 25% Mastery</p>
-                        <p style={{ fontSize: "12px", color: "#6b6b78" }}>Finish {topics.length > 0 ? (Math.ceil(topics.length * 0.25) - comp) : '...'} more lessons</p>
+                        <p style={{ fontSize: "15px", fontWeight: "800", color: "#fff" }}>Reach 25% Mastery</p>
+                        <p style={{ fontSize: "12px", color: "#6b6b78" }}>Only {topics.length > 0 ? (Math.ceil(topics.length * 0.25) - comp) : '...'} segments away</p>
                     </div>
                 </div>
-            </div>
-
-            {/* Memory Matrix Note */}
-            <div className="card" style={{ padding: "24px", background: "transparent", borderStyle: "dashed", borderColor: "rgba(255,255,255,0.06)" }}>
-                <h2 style={{ fontSize: "15px", fontWeight: "800", color: "#f0f0f4", marginBottom: "12px" }}>Why this logic?</h2>
-                <p style={{ fontSize: "12px", color: "#52525e", lineHeight: "1.7" }}>
-                    Zeropoint doesn't just track scores. We analyze the <strong>semantic depth</strong> of your interactions. Every weak area is a node in your personalized memory graph that we help you bridge.
-                </p>
             </div>
 
         </div>
 
       </div>
 
+      <style>{`
+        @media (max-width: 768px) {
+            .mobile-stack { flex-direction: column !important; align-items: flex-start !important; }
+            .mobile-full-width-text { text-align: left !important; margin-top: 8px; }
+        }
+      `}</style>
     </div>
   )
 }

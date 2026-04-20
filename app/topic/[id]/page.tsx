@@ -28,61 +28,82 @@ export default function TopicPage() {
 
   if (loading) return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "50vh", gap: "14px" }}>
-      <div className="spinner" />
-      <p style={{ color: "#52525e", fontSize: "13px" }}>Generating your lesson...</p>
+      <div className="spinner" style={{ width: "32px", height: "32px" }} />
+      <p style={{ color: "#52525e", fontSize: "14px", fontWeight: "600" }}>Generating your lesson...</p>
     </div>
   )
 
   return (
-    <div className="fade-up" style={{ display: "flex", flexDirection: "column", gap: "28px", maxWidth: "740px" }}>
+    <div className="fade-up topic-page-container" style={{ display: "flex", flexDirection: "column", gap: "28px", maxWidth: "800px", margin: "0 auto" }}>
 
-      {/* Back */}
-      <button onClick={() => router.push("/dashboard")}
-        style={{ background: "none", border: "none", cursor: "pointer", color: "#52525e", fontSize: "13px", display: "flex", alignItems: "center", gap: "5px", fontFamily: "inherit", padding: 0, transition: "color 0.15s" }}
-        onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#a78bfa"}
-        onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#52525e"}
-      >
-        ← Dashboard
-      </button>
-
-      {/* Title */}
-      <div>
-        <span className="badge badge-purple" style={{ marginBottom: "10px" }}>AI Lesson</span>
-        <h1>{title}</h1>
+      {/* Back Header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <button onClick={() => router.push("/dashboard")}
+            style={{ 
+                background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", 
+                cursor: "pointer", color: "#8b8b99", fontSize: "12px", fontWeight: "700",
+                display: "flex", alignItems: "center", gap: "8px", padding: "8px 14px", borderRadius: "10px",
+                transition: "all 0.2s"
+            }}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#a78bfa"}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#8b8b99"}
+        >
+            ← Back
+        </button>
+        <span className="badge badge-purple" style={{ padding: "6px 12px", fontSize: "10px" }}>Active Lesson</span>
       </div>
 
-      {/* Lesson content */}
-      <div className="card" style={{ padding: "28px 32px" }}>
-        <div style={{ color: "#a0a0b0", fontSize: "14px", lineHeight: "1.75" }}>
+      {/* Title */}
+      <h1 style={{ fontSize: "clamp(24px, 5vw, 36px)", fontWeight: "900", letterSpacing: "-0.04em", color: "#fff", lineHeight: "1.2" }}>{title}</h1>
+
+      {/* Lesson content container */}
+      <div className="card lesson-content-card" style={{ padding: "clamp(24px, 5vw, 40px)", borderRadius: "24px" }}>
+        <div style={{ color: "#a0a0b0", fontSize: "15px", lineHeight: "1.8" }}>
           <ReactMarkdown components={{
-            h1: ({ children }) => <h2 style={{ fontSize: "16px", fontWeight: "700", color: "#e8e8f0", marginTop: "24px", marginBottom: "10px" }}>{children}</h2>,
-            h2: ({ children }) => <h3 style={{ fontSize: "15px", fontWeight: "600", color: "#d0d0dc", marginTop: "20px", marginBottom: "8px" }}>{children}</h3>,
-            h3: ({ children }) => <h4 style={{ fontSize: "14px", fontWeight: "600", color: "#c0c0cc", marginTop: "16px", marginBottom: "6px" }}>{children}</h4>,
-            p: ({ children }) => <p style={{ marginBottom: "12px", lineHeight: "1.75", color: "#9090a0" }}>{children}</p>,
-            ul: ({ children }) => <ul style={{ paddingLeft: "18px", marginBottom: "12px" }}>{children}</ul>,
-            ol: ({ children }) => <ol style={{ paddingLeft: "18px", marginBottom: "12px" }}>{children}</ol>,
-            li: ({ children }) => <li style={{ marginBottom: "5px", color: "#9090a0" }}>{children}</li>,
-            strong: ({ children }) => <strong style={{ color: "#d0d0dc", fontWeight: "600" }}>{children}</strong>,
-            code: ({ children }) => <code style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "4px", padding: "2px 7px", fontSize: "12px", color: "#a78bfa", fontFamily: "monospace" }}>{children}</code>,
-            pre: ({ children }) => <pre style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "16px", overflow: "auto", fontSize: "12px", margin: "12px 0", fontFamily: "monospace" }}>{children}</pre>,
-            blockquote: ({ children }) => <blockquote style={{ borderLeft: "3px solid #7c3aed", paddingLeft: "14px", margin: "10px 0", color: "#7070808", fontStyle: "italic" }}>{children}</blockquote>,
+            h1: ({ children }) => <h2 style={{ fontSize: "18px", fontWeight: "900", color: "#fff", marginTop: "32px", marginBottom: "16px" }}>{children}</h2>,
+            h2: ({ children }) => <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#e0e0e8", marginTop: "24px", marginBottom: "12px" }}>{children}</h3>,
+            h3: ({ children }) => <h4 style={{ fontSize: "14px", fontWeight: "700", color: "#d0d0dc", marginTop: "20px", marginBottom: "10px" }}>{children}</h4>,
+            p: ({ children }) => <p style={{ marginBottom: "14px", color: "#9b9ba8" }}>{children}</p>,
+            ul: ({ children }) => <ul style={{ paddingLeft: "20px", marginBottom: "16px", display: "flex", flexDirection: "column", gap: "6px" }}>{children}</ul>,
+            li: ({ children }) => <li style={{ color: "#9b9ba8" }}>{children}</li>,
+            strong: ({ children }) => <strong style={{ color: "#fff", fontWeight: "700" }}>{children}</strong>,
+            code: ({ children }) => <code style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.2)", borderRadius: "6px", padding: "3px 8px", fontSize: "13px", color: "#a78bfa", fontFamily: "monospace" }}>{children}</code>,
+            pre: ({ children }) => <pre style={{ background: "#0c0c0e", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "14px", padding: "18px", overflow: "auto", fontSize: "13px", margin: "20px 0", fontFamily: "monospace" }}>{children}</pre>,
+            blockquote: ({ children }) => <blockquote style={{ borderLeft: "4px solid #7c3aed", paddingLeft: "18px", margin: "20px 0", color: "#8b8b99", fontStyle: "italic", background: "rgba(124,58,237,0.02)", padding: "12px 18px", borderRadius: "0 12px 12px 0" }}>{children}</blockquote>,
           }}>{summary}</ReactMarkdown>
         </div>
       </div>
 
-      {/* Persistent topic chat */}
-      <div>
-        <div className="card card-interactive" style={{ padding: "24px" }}>
-          <TopicChat topicId={id as string} topicTitle={title} />
-        </div>
+      {/* AI Tutor Integration */}
+      <div className="card" style={{ padding: "clamp(16px, 4vw, 24px)", borderRadius: "24px" }}>
+        <TopicChat topicId={id as string} topicTitle={title} />
       </div>
 
-      {/* Actions */}
-      <div style={{ display: "flex", gap: "10px", paddingTop: "8px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-        <button className="btn-secondary" onClick={() => router.push(`/flashcards/${id}`)} style={{ flex: 1 }}>Flashcards</button>
-        <button className="btn-primary" onClick={() => router.push(`/quiz/${id}`)} style={{ flex: 1 }}>Take quiz</button>
+      {/* Responsive Control Bar */}
+      <div style={{ display: "flex", gap: "12px", paddingTop: "12px", marginBottom: "80px" }} className="mobile-stack">
+        <button 
+            className="btn-secondary mobile-full-width" 
+            onClick={() => router.push(`/flashcards/${id}`)} 
+            style={{ flex: 1, padding: "14px", borderRadius: "14px", fontWeight: "700" }}
+        >
+            Recall Cards
+        </button>
+        <button 
+            className="btn-primary mobile-full-width" 
+            onClick={() => router.push(`/quiz/${id}`)} 
+            style={{ flex: 1, padding: "14px", borderRadius: "14px", fontWeight: "800", boxShadow: "0 10px 25px rgba(124,58,237,0.3)" }}
+        >
+            Take Mastery Quiz
+        </button>
       </div>
 
+      <style>{`
+        @media (max-width: 768px) {
+            .mobile-stack { flex-direction: column !important; }
+            .mobile-full-width { width: 100% !important; }
+            .lesson-content-card { padding: 24px 20px !important; border-radius: 18px !important; }
+        }
+      `}</style>
     </div>
   )
 }
