@@ -257,5 +257,18 @@ h3 { font-size: 1rem; font-weight: 600; }
 /* ─── Link transitions ──────────────────────────────────────────── */
 a { transition: color 0.15s, opacity 0.15s; }
 
+/* ─── Responsive Utilities ───────────────────────────────────────── */
+@media (max-width: 1024px) {
+  h1 { font-size: 1.75rem; }
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 1.5rem; }
+  .card { padding: 20px !important; }
+  .mobile-hide { display: none !important; }
+  .mobile-stack { flex-direction: column !important; }
+  .mobile-grid-1 { grid-template-columns: 1fr !important; }
+}
+
 /* ─── Selection ─────────────────────────────────────────────────── */
 ::selection { background: rgba(124,58,237,0.3); color: #f0f0f4; }

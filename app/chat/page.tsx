@@ -1,22 +1,13 @@
 "use client"
 
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect } from "react"
+import { supabase } from "@/lib/supabase"
 import ReactMarkdown from "react-markdown"
 
 type Msg = { id?: string; role: "user" | "assistant"; content: string }
 type Session = { id: string; title: string; updated_at: string; topic_id?: string }
 
 // ── helpers ────────────────────────────────────────────────────────
-function timeAgo(iso: string) {
-  const diff = Date.now() - new Date(iso).getTime()
-  const m = Math.floor(diff / 60000)
-  if (m < 1) return "Just now"
-  if (m < 60) return `${m}m ago`
-  const h = Math.floor(m / 60)
-  if (h < 24) return `${h}h ago`
-  return new Date(iso).toLocaleDateString()
-}
-
 function groupSessions(sessions: Session[]) {
   const today: Session[] = [], yesterday: Session[] = [], older: Session[] = []
   const now = Date.now()
@@ -40,12 +31,21 @@ export default function ChatPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editTitle, setEditTitle] = useState("")
+  const [roadmap, setRoadmap] = useState<any>(null)
   const endRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
-  useEffect(() => { loadSessions() }, [])
+  useEffect(() => { loadSessions(); loadRoadmap() }, [])
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }) }, [msgs, loading])
   useEffect(() => { inputRef.current?.focus() }, [activeId])
+
+  const loadRoadmap = async () => {
+    const id = localStorage.getItem("activeRoadmapId")
+    if (id) {
+        const { data } = await supabase.from("roadmaps").select("*").eq("id", id).single()
+        setRoadmap(data)
+    }
+  }
 
   const loadSessions = async () => {
     const r = await fetch("/api/chat-sessions")
@@ -106,14 +106,12 @@ export default function ChatPage() {
     setMsgs(m => [...m, userMsg])
     setLoading(true)
 
-    // Save user message to DB
     await fetch(`/api/chat-sessions/${activeId}/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ role: "user", content: text })
     })
 
-    // Auto-title if this is the first message
     const isFirst = msgs.length === 0
     if (isFirst) {
       const shortTitle = text.length > 50 ? text.substring(0, 47) + "..." : text
@@ -138,7 +136,6 @@ export default function ChatPage() {
       const reply = d.reply || "No response."
       setMsgs(m => [...m, { role: "assistant", content: reply }])
 
-      // Save AI reply to DB
       await fetch(`/api/chat-sessions/${activeId}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -157,29 +154,24 @@ export default function ChatPage() {
 
   const groups = groupSessions(sessions)
 
-  // ── Sidebar Section ──────────────────────────────────────
+  // ── Sidebar Section Overlay ──
   const SidebarSection = ({ label, items }: { label: string; items: Session[] }) => {
     if (!items.length) return null
     return (
       <div style={{ marginBottom: "4px" }}>
-        <p style={{ fontSize: "10px", fontWeight: "600", color: "#3f3f48", textTransform: "uppercase", letterSpacing: "0.08em", padding: "8px 12px 4px" }}>{label}</p>
+        <p style={{ fontSize: "10px", fontWeight: "800", color: "#3f3f48", textTransform: "uppercase", letterSpacing: "0.12em", padding: "12px 14px 4px" }}>{label}</p>
         {items.map(s => (
           <div key={s.id}
             onClick={() => editingId !== s.id && openSession(s.id)}
             style={{
-              display: "flex", alignItems: "center", gap: "8px", padding: "8px 10px",
-              borderRadius: "7px", cursor: "pointer", margin: "0 4px 1px",
-              background: activeId === s.id ? "rgba(124,58,237,0.12)" : "transparent",
+              display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px",
+              borderRadius: "10px", cursor: "pointer", margin: "2px 8px",
+              background: activeId === s.id ? "rgba(124,58,237,0.15)" : "transparent",
               border: activeId === s.id ? "1px solid rgba(124,58,237,0.2)" : "1px solid transparent",
-              transition: "all 0.12s", position: "relative",
+              transition: "all 0.2s cubic-bezier(0.16,1,0.3,1)",
             }}
-            onMouseEnter={e => { if (activeId !== s.id) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.03)" }}
-            onMouseLeave={e => { if (activeId !== s.id) (e.currentTarget as HTMLElement).style.background = "transparent" }}
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={activeId === s.id ? "#a78bfa" : "#52525e"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-
+            <span style={{ fontSize: "12px", color: activeId === s.id ? "#e0e0f0" : "#52525e" }}>#</span>
             {editingId === s.id ? (
               <input
                 autoFocus
@@ -188,35 +180,12 @@ export default function ChatPage() {
                 onKeyDown={e => { if (e.key === "Enter") saveTitle(s.id); if (e.key === "Escape") setEditingId(null) }}
                 onBlur={() => saveTitle(s.id)}
                 onClick={e => e.stopPropagation()}
-                style={{ flex: 1, background: "var(--bg-raised)", border: "1px solid rgba(124,58,237,0.4)", borderRadius: "5px", padding: "2px 7px", fontSize: "12px", color: "#e0e0f0", outline: "none", fontFamily: "inherit" }}
+                style={{ flex: 1, background: "rgba(0,0,0,0.2)", border: "1px solid rgba(124,58,237,0.4)", borderRadius: "6px", padding: "2px 8px", fontSize: "12px", color: "#fff", outline: "none", fontFamily: "inherit" }}
               />
             ) : (
-              <span style={{ flex: 1, fontSize: "12px", color: activeId === s.id ? "#e0e0f0" : "#8b8b99", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              <span style={{ flex: 1, fontSize: "12px", color: activeId === s.id ? "#fff" : "#8b8b99", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: activeId === s.id ? "600" : "400" }}>
                 {s.title}
               </span>
-            )}
-
-            {activeId === s.id && editingId !== s.id && (
-              <div style={{ display: "flex", gap: "2px", flexShrink: 0 }}>
-                <button onClick={e => { e.stopPropagation(); setEditingId(s.id); setEditTitle(s.title) }}
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: "2px 4px", color: "#52525e", borderRadius: "4px", transition: "color 0.12s" }}
-                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#a78bfa"}
-                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#52525e"}
-                >
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                </button>
-                <button onClick={e => deleteSession(s.id, e)}
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: "2px 4px", color: "#52525e", borderRadius: "4px", transition: "color 0.12s" }}
-                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#f87171"}
-                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#52525e"}
-                >
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
-                  </svg>
-                </button>
-              </div>
             )}
           </div>
         ))}
@@ -229,235 +198,118 @@ export default function ChatPage() {
 
       {/* ── LEFT SIDEBAR ── */}
       <div style={{
-        width: sidebarOpen ? "260px" : "0px",
-        minWidth: sidebarOpen ? "260px" : "0px",
-        background: "#0e0e11",
+        width: sidebarOpen ? "280px" : "0px",
+        minWidth: sidebarOpen ? "280px" : "0px",
+        background: "#0c0c0e",
         borderRight: "1px solid rgba(255,255,255,0.06)",
         display: "flex", flexDirection: "column",
-        transition: "width 0.25s cubic-bezier(0.16,1,0.3,1), min-width 0.25s cubic-bezier(0.16,1,0.3,1)",
+        transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
         overflow: "hidden",
       }}>
-
-        {/* New Chat button */}
-        <div style={{ padding: "16px 12px 12px", flexShrink: 0 }}>
+        <div style={{ padding: "20px 16px 12px", flexShrink: 0 }}>
           <button onClick={newChat} style={{
-            width: "100%", display: "flex", alignItems: "center", gap: "8px", padding: "9px 12px",
-            background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.2)",
-            borderRadius: "8px", cursor: "pointer", color: "#a78bfa", fontSize: "13px", fontWeight: "500",
-            fontFamily: "inherit", transition: "all 0.15s",
-          }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(124,58,237,0.18)" }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(124,58,237,0.1)" }}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            New chat
+            width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px",
+            background: "linear-gradient(135deg, rgba(124,58,237,0.1), rgba(79,70,229,0.1))", border: "1px solid rgba(124,58,237,0.2)",
+            borderRadius: "12px", cursor: "pointer", color: "#a78bfa", fontSize: "13px", fontWeight: "700",
+            fontFamily: "inherit", transition: "all 0.2s",
+          }}>
+            <span style={{ fontSize: "18px" }}>+</span>
+            New Discussion
           </button>
         </div>
-
-        {/* Sessions list */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "0 4px 12px" }}>
-          {sessions.length === 0 ? (
-            <p style={{ fontSize: "12px", color: "#3f3f48", padding: "16px 14px" }}>No conversations yet. Click "New chat" to start.</p>
-          ) : (
-            <>
-              <SidebarSection label="Today" items={groups.today} />
-              <SidebarSection label="Yesterday" items={groups.yesterday} />
-              <SidebarSection label="Older" items={groups.older} />
-            </>
-          )}
+        <div style={{ flex: 1, overflowY: "auto", padding: "4px 0" }}>
+          <SidebarSection label="Today" items={groups.today} />
+          <SidebarSection label="Past Sessions" items={[...groups.yesterday, ...groups.older]} />
         </div>
+        
+        {/* Dynamic Grounding Context (Vercel Artifact Request) */}
+        {roadmap && (
+          <div style={{ padding: "20px", borderTop: "1px solid rgba(255,255,255,0.04)", background: "rgba(124,58,237,0.02)" }}>
+              <p style={{ fontSize: "10px", fontWeight: "800", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "8px" }}>Active Grounding</p>
+              <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#4ade80 shadow-[0_0_10px_rgba(74,222,128,0.5)]" }}></div>
+                  <span style={{ fontSize: "12px", color: "#8b8b99", fontWeight: "600", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{roadmap.subject}</span>
+              </div>
+          </div>
+        )}
       </div>
 
       {/* ── MAIN CHAT AREA ── */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", background: "var(--bg)" }}>
-
-        {/* Top bar */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", flexShrink: 0 }}>
-          <button onClick={() => setSidebarOpen(o => !o)}
-            style={{ background: "none", border: "none", cursor: "pointer", color: "#52525e", padding: "6px", borderRadius: "6px", display: "flex", transition: "all 0.15s" }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = "#e0e0f0"; (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)" }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "#52525e"; (e.currentTarget as HTMLElement).style.background = "none" }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        
+        {/* Grounded Top Bar */}
+        <div style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px 32px", borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.1)", backdropFilter: "blur(10px)", zIndex: 10 }}>
+          <button onClick={() => setSidebarOpen(o => !o)} style={{ background: "none", border: "none", cursor: "pointer", color: "#52525e", padding: "8px", borderRadius: "8px", display: "flex", transition: "all 0.2s" }} onMouseEnter={e => (e.currentTarget.style.color="#fff")}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
-          <span style={{ fontSize: "14px", fontWeight: "600", color: "#e0e0f0" }}>
-            {activeId ? (sessions.find(s => s.id === activeId)?.title || "Chat") : "AI Tutor"}
-          </span>
-          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "6px" }}>
-            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#4ade80", animation: "pulse 2s ease infinite" }} />
-            <span style={{ fontSize: "11px", color: "#52525e" }}>Zeropoint AI</span>
+          <div style={{ flex: 1 }}>
+            <span style={{ fontSize: "15px", fontWeight: "800", color: "#fff" }}>{activeId ? sessions.find(s => s.id === activeId)?.title : "Tutor Hub"}</span>
+            {roadmap && !activeId && <p style={{ fontSize: "11px", color: "#52525e", marginTop: "2px" }}>Grounded in your goals for <strong style={{ color: "#a78bfa" }}>{roadmap.subject}</strong></p>}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "6px 14px", background: "rgba(124,58,237,0.06)", border: "1px solid rgba(124,58,237,0.15)", borderRadius: "10px" }}>
+             <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#4ade80" }} />
+             <span style={{ fontSize: "12px", fontWeight: "700", color: "#a78bfa" }}>ZEROPOINT AI ONLINE</span>
           </div>
         </div>
 
         {/* Messages */}
         <div style={{ flex: 1, overflowY: "auto", padding: "0" }}>
-
-          {/* No session selected */}
-          {!activeId && (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: "16px", textAlign: "center", padding: "40px" }}>
-              <div style={{ width: "52px", height: "52px", borderRadius: "14px", background: "linear-gradient(135deg,#7c3aed,#4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "22px", fontWeight: "700", color: "#fff" }}>Z</div>
+          {!activeId ? (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: "32px", textAlign: "center", padding: "40px" }}>
+              <div style={{ width: "80px", height: "80px", borderRadius: "24px", background: "linear-gradient(135deg,#7c3aed,#4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "32px", fontWeight: "800", color: "#fff", boxShadow: "0 20px 50px rgba(124,58,237,0.3)" }}>Z</div>
               <div>
-                <h2 style={{ marginBottom: "6px" }}>How can I help you study?</h2>
-                <p style={{ fontSize: "14px", color: "#52525e", maxWidth: "380px" }}>Your AI tutor — deep explanations, real examples, and personalized to your weak areas.</p>
+                <h1 style={{ fontSize: "32px", fontWeight: "900", marginBottom: "12px", letterSpacing: "-0.04em" }}>Insight Hub</h1>
+                <p style={{ fontSize: "15px", color: "#6b6b78", maxWidth: "420px", lineHeight: "1.6" }}>Your context-aware study partner. Ask anything about your roadmap, concepts, or problem-solving approaches.</p>
               </div>
-              <button onClick={newChat} style={{
-                display: "flex", alignItems: "center", gap: "7px", padding: "10px 22px",
-                background: "#7c3aed", border: "none", borderRadius: "8px", color: "#fff",
-                fontSize: "14px", fontWeight: "500", cursor: "pointer", fontFamily: "inherit", transition: "background 0.15s",
-              }}
-                onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "#6d28d9"}
-                onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "#7c3aed"}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Start new chat
-              </button>
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "center", maxWidth: "440px" }}>
-                {["Explain this topic in depth", "Give me a step-by-step breakdown", "What are the key concepts I need to know?", "Can you give me real-world examples?"].map(q => (
-                  <button key={q} onClick={async () => { await newChat(); setTimeout(() => setInput(q), 300) }}
-                    style={{ fontSize: "12px", padding: "7px 14px", borderRadius: "8px", background: "var(--bg-subtle)", border: "1px solid var(--border)", color: "#8b8b99", cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s", textAlign: "left" }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(124,58,237,0.35)"; (e.currentTarget as HTMLElement).style.color = "#a78bfa" }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.color = "#8b8b99" }}
-                  >{q}</button>
+              <button onClick={newChat} className="btn-primary" style={{ padding: "14px 32px", borderRadius: "14px", fontWeight: "800" }}>Start New Discussion</button>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", maxWidth: "540px" }}>
+                {[ "Explain the core mechanics of my last topic", "What are common pitfalls in this subject?", "Can you design a practice problem for me?", "Summarize my progress so far" ].map(q => (
+                  <button key={q} onClick={async () => { await newChat(); setTimeout(() => setInput(q), 300) }} style={{ fontSize: "13px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)", color: "#8b8b99", cursor: "pointer", textAlign: "left", transition: "all 0.2s" }} onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(124,58,237,0.3)"; e.currentTarget.style.background="rgba(124,58,237,0.02)"; }}>{q}</button>
                 ))}
               </div>
             </div>
-          )}
-
-          {/* Loading session messages */}
-          {activeId && loadingSession && (
-            <div style={{ display: "flex", justifyContent: "center", paddingTop: "80px" }}>
-              <div className="spinner" />
-            </div>
-          )}
-
-          {/* Messages */}
-          {activeId && !loadingSession && (
-            <div style={{ maxWidth: "760px", margin: "0 auto", padding: "24px 24px 0" }}>
-              {msgs.length === 0 && (
-                <div style={{ textAlign: "center", paddingTop: "60px", color: "#3f3f48", fontSize: "13px" }}>
-                  Start by asking a question below...
-                </div>
-              )}
-              {msgs.map((m, i) => (
-                <div key={i} style={{ marginBottom: "28px", display: "flex", gap: "14px", alignItems: "flex-start" }}>
-                  {/* Avatar */}
-                  <div style={{ flexShrink: 0, marginTop: "2px" }}>
-                    {m.role === "assistant" ? (
-                      <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "linear-gradient(135deg,#7c3aed,#4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "700", color: "#fff" }}>Z</div>
-                    ) : (
-                      <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "#27272a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "600", color: "#a0a0b0" }}>U</div>
-                    )}
-                  </div>
-                  {/* Content */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: "12px", fontWeight: "600", color: m.role === "assistant" ? "#a78bfa" : "#6b6b78", marginBottom: "6px" }}>
-                      {m.role === "assistant" ? "Zeropoint AI" : "You"}
-                    </p>
-                    {m.role === "user" ? (
-                      <p style={{ fontSize: "15px", color: "#e0e0f0", lineHeight: "1.65" }}>{m.content}</p>
-                    ) : (
-                      <div style={{ fontSize: "14px", lineHeight: "1.75", color: "#a8a8b8" }}>
-                        <ReactMarkdown components={{
-                          h1: ({ children }) => <h1 style={{ fontSize: "18px", fontWeight: "700", color: "#e8e8f0", margin: "0 0 12px", letterSpacing: "-0.02em" }}>{children}</h1>,
-                          h2: ({ children }) => <h2 style={{ fontSize: "16px", fontWeight: "600", color: "#d8d8e8", margin: "20px 0 10px" }}>{children}</h2>,
-                          h3: ({ children }) => <h3 style={{ fontSize: "14px", fontWeight: "600", color: "#c8c8d8", margin: "16px 0 8px" }}>{children}</h3>,
-                          p: ({ children }) => <p style={{ margin: "0 0 14px", lineHeight: "1.8" }}>{children}</p>,
-                          ul: ({ children }) => <ul style={{ margin: "6px 0 14px", paddingLeft: "20px" }}>{children}</ul>,
-                          ol: ({ children }) => <ol style={{ margin: "6px 0 14px", paddingLeft: "20px" }}>{children}</ol>,
-                          li: ({ children }) => <li style={{ margin: "6px 0", lineHeight: "1.7" }}>{children}</li>,
-                          strong: ({ children }) => <strong style={{ color: "#e0e0f0", fontWeight: "600" }}>{children}</strong>,
-                          code: ({ children }) => <code style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.2)", borderRadius: "5px", padding: "2px 7px", fontSize: "12px", color: "#a78bfa", fontFamily: "monospace" }}>{children}</code>,
-                          pre: ({ children }) => <pre style={{ background: "rgba(0,0,0,0.35)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "10px", padding: "16px 18px", overflow: "auto", fontSize: "12px", margin: "12px 0", fontFamily: "monospace", lineHeight: "1.6" }}>{children}</pre>,
-                          blockquote: ({ children }) => <blockquote style={{ borderLeft: "3px solid #7c3aed", paddingLeft: "16px", margin: "12px 0", color: "#8b8b99", fontStyle: "italic" }}>{children}</blockquote>,
-                          hr: () => <hr style={{ border: "none", borderTop: "1px solid rgba(255,255,255,0.08)", margin: "20px 0" }} />,
-                        }}>{m.content}</ReactMarkdown>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              {/* Typing indicator */}
-              {loading && (
-                <div style={{ marginBottom: "28px", display: "flex", gap: "14px", alignItems: "flex-start" }}>
-                  <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "linear-gradient(135deg,#7c3aed,#4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "700", color: "#fff", flexShrink: 0 }}>Z</div>
-                  <div style={{ paddingTop: "8px" }}>
-                    <p style={{ fontSize: "12px", fontWeight: "600", color: "#a78bfa", marginBottom: "10px" }}>Zeropoint AI</p>
-                    <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
-                      {[0, 1, 2].map(i => <div key={i} style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#7c3aed", animation: "bounce 1.2s ease infinite", animationDelay: `${i * 0.2}s` }} />)}
+          ) : (
+            <div style={{ maxWidth: "800px", margin: "0 auto", padding: "40px 32px" }}>
+                {msgs.map((m, i) => (
+                    <div key={i} style={{ marginBottom: "40px", display: "flex", gap: "20px" }}>
+                        <div style={{ flexShrink: 0, width: "36px", height: "36px", borderRadius: "12px", background: m.role === 'assistant' ? 'linear-gradient(135deg,#7c3aed,#4f46e5)' : '#1a1a1e', display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "800", color: "#fff", fontSize: "13px" }}>{m.role === 'assistant' ? 'Z' : 'U'}</div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: "12px", fontWeight: "800", color: m.role === 'assistant' ? '#a78bfa' : '#52525e', marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.1em" }}>{m.role === 'assistant' ? 'Zeropoint Intelligence' : 'You'}</p>
+                            <div style={{ fontSize: "15px", lineHeight: "1.8", color: m.role === 'assistant' ? '#e0e0e0' : '#fff' }}>
+                                <ReactMarkdown components={{
+                                    h1: ({ children }) => <h2 style={{ fontSize: "20px", fontWeight: "900", color: "#fff", margin: "32px 0 16px" }}>{children}</h2>,
+                                    blockquote: ({ children }) => <div style={{ borderLeft: "4px solid #7c3aed", background: "rgba(124,58,237,0.03)", padding: "16px 20px", borderRadius: "0 12px 12px 0", margin: "24px 0", color: "#fff", fontStyle: "italic" }}>{children}</div>,
+                                    code: ({ children }) => <code style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.2)", borderRadius: "6px", padding: "2px 6px", fontSize: "13px", color: "#a78bfa", fontFamily: "monospace" }}>{children}</code>,
+                                    pre: ({ children }) => <pre style={{ background: "#0c0c0e", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", padding: "20px", overflow: "auto", margin: "20px 0" }}>{children}</pre>
+                                }}>{m.content}</ReactMarkdown>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                </div>
-              )}
-              <div ref={endRef} style={{ height: "120px" }} />
+                ))}
+                {loading && <div style={{ display: "flex", gap: "20px", marginBottom: "40px" }}><div style={{ width: "36px", height: "36px", borderRadius: "12px", background: "linear-gradient(135deg,#7c3aed,#4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "800", color: "#fff" }}>Z</div><div style={{ alignSelf: "center" }}><div className="spinner" style={{ width: "16px", height: "16px" }} /></div></div>}
+                <div ref={endRef} style={{ height: "160px" }} />
             </div>
           )}
         </div>
 
-        {/* ── INPUT BAR ── */}
+        {/* Input Grounded */}
         {activeId && (
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "16px 24px 20px", background: "var(--bg)", flexShrink: 0 }}>
-            <div style={{ maxWidth: "760px", margin: "0 auto" }}>
-              <div style={{
-                display: "flex", gap: "10px", alignItems: "flex-end",
-                background: "var(--bg-subtle)", border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: "12px", padding: "10px 14px",
-                transition: "border-color 0.18s, box-shadow 0.18s",
-                boxShadow: "0 0 0 0 rgba(124,58,237,0)",
-              }}
-                onFocusCapture={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(124,58,237,0.4)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 0 0 3px rgba(124,58,237,0.12)" }}
-                onBlurCapture={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 0 0 0 transparent" }}
-              >
-                <textarea
-                  ref={inputRef}
-                  rows={1}
-                  placeholder="Message Zeropoint AI..."
-                  value={input}
-                  onChange={e => {
-                    setInput(e.target.value)
-                    e.target.style.height = "auto"
-                    e.target.style.height = Math.min(e.target.scrollHeight, 160) + "px"
-                  }}
-                  onKeyDown={handleKey}
-                  style={{
-                    flex: 1, background: "none", border: "none", outline: "none",
-                    color: "#e0e0f0", fontSize: "14px", lineHeight: "1.6", resize: "none",
-                    fontFamily: "inherit", maxHeight: "160px", overflow: "auto",
-                    padding: "2px 0",
-                  }}
-                />
-                <button
-                  onClick={send}
-                  disabled={loading || !input.trim()}
-                  style={{
-                    width: "34px", height: "34px", borderRadius: "8px", flexShrink: 0,
-                    background: input.trim() && !loading ? "#7c3aed" : "rgba(255,255,255,0.05)",
-                    border: "none", cursor: input.trim() && !loading ? "pointer" : "not-allowed",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    transition: "all 0.15s",
-                  }}
-                >
-                  {loading
-                    ? <div style={{ width: "14px", height: "14px", border: "2px solid rgba(255,255,255,0.2)", borderTopColor: "#a78bfa", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-                    : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={input.trim() ? "#fff" : "#52525e"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                  }
-                </button>
-              </div>
-              <p style={{ fontSize: "11px", color: "#2a2a32", textAlign: "center", marginTop: "8px" }}>
-                Shift+Enter for new line · Context-aware: knows your syllabus & weak areas
-              </p>
+            <div style={{ padding: "0 32px 32px", position: "relative" }}>
+                <div style={{ maxWidth: "800px", margin: "0 auto", position: "relative" }}>
+                    <div style={{ position: "absolute", top: "-24px", left: "20px", display: "flex", gap: "8px" }}>
+                       <div style={{ padding: "4px 10px", background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.2)", borderRadius: "8px 8px 0 0", fontSize: "10px", fontWeight: "800", color: "#a78bfa", textTransform: "uppercase" }}>Context: {roadmap?.subject || 'Global'}</div>
+                    </div>
+                    <div style={{ background: "#111114", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "20px", padding: "12px", boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}>
+                        <textarea ref={inputRef} rows={1} placeholder="Inquire with AI..." value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKey} style={{ width: "100%", background: "none", border: "none", outline: "none", color: "#fff", fontSize: "15px", padding: "12px", resize: "none", fontFamily: "inherit" }} />
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px 4px", borderTop: "1px solid rgba(255,255,255,0.03)" }}>
+                            <span style={{ fontSize: "11px", color: "#3f3f48" }}>ZERPOINT v1.2 • Semantic Grounding Active</span>
+                            <button onClick={send} disabled={loading || !input.trim()} style={{ background: input.trim() ? "#7c3aed" : "rgba(255,255,255,0.03)", border: "none", borderRadius: "10px", padding: "8px 16px", color: "#fff", cursor: "pointer", fontSize: "12px", fontWeight: "800", transition: "all 0.2s" }}>SEND →</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         )}
       </div>
-
-      <style>{`
-        @keyframes bounce { 0%,80%,100%{transform:scale(0);opacity:0.4} 40%{transform:scale(1);opacity:1} }
-        @keyframes spin { to{transform:rotate(360deg)} }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-      `}</style>
     </div>
   )
 }
