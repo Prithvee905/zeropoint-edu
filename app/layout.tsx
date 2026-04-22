@@ -100,6 +100,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </main>
             </div>
           </div>
+        </AuthProvider>
       </body>
     </html>
   )
