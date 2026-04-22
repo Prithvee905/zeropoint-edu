@@ -6,12 +6,17 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const topicId = searchParams.get("topicId");
 
+    const userId = searchParams.get("userId");
+
     let query = supabase
         .from("chat_sessions")
         .select("id, title, created_at, updated_at, topic_id")
         .order("updated_at", { ascending: false })
         .limit(100);
 
+    if (userId) {
+        query = query.eq("user_id", userId);
+    }
     if (topicId) {
         query = query.eq("topic_id", topicId);
     }
@@ -27,15 +32,18 @@ export async function GET(req: Request) {
 
 // POST /api/chat-sessions — create a new session
 export async function POST(req: Request) {
-    const { title, roadmapId, topicId } = await req.json();
+    const { title, roadmapId, topicId, userId } = await req.json();
+
+    const insertData: any = {
+        title: title || "New Chat",
+        roadmap_id: roadmapId || null,
+        topic_id: topicId || null,
+    };
+    if (userId) insertData.user_id = userId;
 
     const { data, error } = await supabase
         .from("chat_sessions")
-        .insert([{
-            title: title || "New Chat",
-            roadmap_id: roadmapId || null,
-            topic_id: topicId || null,
-        }])
+        .insert([insertData])
         .select()
         .single();
 

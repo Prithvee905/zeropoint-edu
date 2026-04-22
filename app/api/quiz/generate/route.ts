@@ -29,7 +29,8 @@ export async function POST(req: Request) {
             messages: [
                 {
                     role: "system",
-                    content: `You are an expert quiz generator. Your task is to generate exactly 3 highly relevant multiple-choice questions based ONLY on the provided lesson text.
+                    content: `You are an expert quiz generator. Your task is to generate exactly 15 highly relevant multiple-choice questions based ONLY on the provided lesson text. The questions should be uniquely challenging, with roughly 70% of them being hard or advanced difficulty.
+Ensure there is a balance of question types: do not only ask theoretical questions. Where applicable based on the topic, strongly prioritize including numerical problems, calculations, or applied scenario questions.
                     
 Return the response strictly as valid JSON matching this exact structure:
 {

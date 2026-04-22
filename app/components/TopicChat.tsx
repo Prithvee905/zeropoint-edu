@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import ReactMarkdown from "react-markdown"
+import { useAuth } from "@/app/components/AuthProvider"
 
 type Msg = { role: "user" | "assistant"; content: string }
 
@@ -16,15 +17,16 @@ export default function TopicChat({ topicId, topicTitle }: Props) {
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const [init, setInit] = useState(true)
+  const { user } = useAuth()
   const endRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   // Initialize session and load history
   useEffect(() => {
-    if (topicId) {
+    if (topicId && user?.id) {
       initSession()
     }
-  }, [topicId])
+  }, [topicId, user?.id])
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -34,10 +36,11 @@ export default function TopicChat({ topicId, topicTitle }: Props) {
   }, [msgs, loading])
 
   const initSession = async () => {
+    if (!user?.id) return;
     setInit(true)
     try {
       // 1. Find existing session for this topic
-      const r = await fetch(`/api/chat-sessions?topicId=${topicId}`)
+      const r = await fetch(`/api/chat-sessions?topicId=${topicId}&userId=${user.id}`)
       const d = await r.json()
       
       // Look for a session specifically linked to this topic_id
@@ -61,7 +64,8 @@ export default function TopicChat({ topicId, topicTitle }: Props) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             title: `${topicTitle} — Tutor Chat`,
-            topicId
+            topicId,
+            userId: user.id
           })
         })
         const cd = await cr.json()

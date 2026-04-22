@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
 import ReactMarkdown from "react-markdown"
+import { useAuth } from "@/app/components/AuthProvider"
 
 type Msg = { id?: string; role: "user" | "assistant"; content: string }
 type Session = { id: string; title: string; updated_at: string; topic_id?: string }
@@ -32,10 +33,11 @@ export default function ChatPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editTitle, setEditTitle] = useState("")
   const [roadmap, setRoadmap] = useState<any>(null)
+  const { user } = useAuth()
   const endRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
-  useEffect(() => { loadSessions(); loadRoadmap() }, [])
+  useEffect(() => { if (user?.id) { loadSessions(); loadRoadmap() } }, [user?.id])
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }) }, [msgs, loading])
   useEffect(() => { inputRef.current?.focus() }, [activeId])
 
@@ -48,7 +50,8 @@ export default function ChatPage() {
   }
 
   const loadSessions = async () => {
-    const r = await fetch("/api/chat-sessions")
+    if (!user?.id) return;
+    const r = await fetch(`/api/chat-sessions?userId=${user.id}`);
     const d = await r.json()
     setSessions(d.sessions || [])
   }
@@ -65,10 +68,15 @@ export default function ChatPage() {
   }
 
   const newChat = async () => {
+    if (!user?.id) return;
     const r = await fetch("/api/chat-sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: "New Chat", roadmapId: localStorage.getItem("activeRoadmapId") })
+      body: JSON.stringify({ 
+        title: "New Chat", 
+        roadmapId: localStorage.getItem("activeRoadmapId"),
+        userId: user.id
+      })
     })
     const d = await r.json()
     if (d.session) {

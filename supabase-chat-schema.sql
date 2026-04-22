@@ -4,6 +4,7 @@
 CREATE TABLE IF NOT EXISTS chat_sessions (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title       TEXT NOT NULL DEFAULT 'New Chat',
+  user_id     UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   roadmap_id  UUID REFERENCES roadmaps(id) ON DELETE SET NULL,
   topic_id    UUID REFERENCES topics(id) ON DELETE SET NULL,
   created_at  TIMESTAMPTZ DEFAULT NOW(),
