@@ -101,15 +101,15 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       }}>
         {user ? (
           <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-              <div style={{ width: "32px", height: "32px", borderRadius: "10px", background: "linear-gradient(135deg, var(--purple), #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "900", color: "var(--text-1)" }}>
+            <Link href="/settings" onClick={onClose} style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none" }}>
+              <div style={{ width: "32px", height: "32px", borderRadius: "10px", background: "linear-gradient(135deg, var(--purple), #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "900", color: "#fff" }}>
                 {user.email?.[0].toUpperCase()}
               </div>
               <div style={{ overflow: "hidden" }}>
                   <p style={{ fontSize: "13px", fontWeight: "800", color: "var(--text-1)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email?.split('@')[0]}</p>
                   <p style={{ fontSize: "10px", color: "var(--text-3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</p>
               </div>
-            </div>
+            </Link>
             <button 
               onClick={() => { signOut(); if (onClose) onClose(); }}
               style={{ width: "100%", padding: "12px", borderRadius: "14px", background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.15)", color: "#f87171", fontSize: "13px", fontWeight: "800", cursor: "pointer", transition: "all 0.2s" }}

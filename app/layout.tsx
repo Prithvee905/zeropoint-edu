@@ -6,6 +6,7 @@ import DesktopNav from "./components/DesktopNav"
 import NavProgress from "./components/NavProgress"
 import PageTransition from "./components/PageTransition"
 import { AuthProvider } from "./components/AuthProvider"
+import { ThemeProvider } from "./components/ThemeProvider"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   }, [pathname])
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -28,7 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover"/> 
       </head>
       <body style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "var(--bg)", margin: 0, padding: 0, overflowX: "hidden" }}>
-        <AuthProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <AuthProvider>
           <NavProgress />
           <DesktopNav />
           
@@ -103,7 +105,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </AuthProvider>
-      </body>
-    </html>
+      </ThemeProvider>
+    </body>
+  </html>
   )
 }

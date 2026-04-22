@@ -73,14 +73,14 @@ export default function DesktopNav() {
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               {user ? (
                   <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                          <div style={{ width: "32px", height: "32px", borderRadius: "10px", background: "linear-gradient(135deg, var(--purple), #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "900", color: "var(--text-1)" }}>
+                      <Link href="/settings" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+                          <div style={{ width: "32px", height: "32px", borderRadius: "10px", background: "linear-gradient(135deg, var(--purple), #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "900", color: "#fff" }}>
                               {user.email?.[0].toUpperCase()}
                           </div>
                           <div>
                               <p style={{ fontSize: "12px", fontWeight: "800", color: "var(--text-1)" }}>{user.email?.split('@')[0]}</p>
                           </div>
-                      </div>
+                      </Link>
                       <button onClick={signOut} className="btn-secondary" style={{ padding: "8px 16px", fontSize: "12px" }}>Sign Out</button>
                   </div>
               ) : (
