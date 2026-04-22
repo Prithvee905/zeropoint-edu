@@ -2,6 +2,7 @@
 
 import "./globals.css"
 import Sidebar from "./components/Sidebar"
+import DesktopNav from "./components/DesktopNav"
 import NavProgress from "./components/NavProgress"
 import PageTransition from "./components/PageTransition"
 import { AuthProvider } from "./components/AuthProvider"
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "var(--bg)", margin: 0, padding: 0, overflowX: "hidden" }}>
         <AuthProvider>
           <NavProgress />
+          <DesktopNav />
           
           <div style={{ display: "flex", minHeight: "100vh", position: "relative", flexDirection: "column" }}>
             

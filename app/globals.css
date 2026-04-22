@@ -306,9 +306,10 @@ a { transition: color 0.15s, opacity 0.15s; }
 }
 
 @media (min-width: 769px) {
-  .sidebar-body { position: sticky !important; transform: none !important; }
-  .sidebar-backdrop { display: none !important; }
-  .sidebar-root { position: relative !important; }
+  /* Hide Mobile Sidebar entirely on Desktop */
+  .sidebar-root { display: none !important; }
+  .desktop-only-flex { display: flex !important; }
+  .main-content-area { padding-top: 72px !important; }
 }
 
 @media (max-width: 480px) {
@@ -321,3 +322,4 @@ a { transition: color 0.15s, opacity 0.15s; }
 }
 
 .mobile-only-flex { display: none; }
+.desktop-only-flex { display: none; }
