@@ -305,6 +305,7 @@ a { transition: color 0.15s, opacity 0.15s; }
 @media (max-width: 768px) {
   /* Layout */
   .mobile-only-flex { display: flex !important; }
+  .desktop-only-flex { display: none !important; }
   .sidebar-body { transform: translateX(-100%); }
   .is-open .sidebar-body { transform: translateX(0); }
   .main-content-area { padding-top: calc(64px + env(safe-area-inset-top)) !important; }
