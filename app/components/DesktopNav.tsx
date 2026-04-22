@@ -26,65 +26,69 @@ export default function DesktopNav() {
       position: "fixed", top: 0, left: 0, right: 0, height: "72px",
       background: "rgba(12,12,14,0.85)", backdropFilter: "blur(20px)",
       borderBottom: "1px solid rgba(255,255,255,0.08)",
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      padding: "0 40px", zIndex: 900
+      zIndex: 900, display: "flex", justifyContent: "center"
     }}>
-      {/* Logo */}
-      <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-        <div style={{
-          width: "32px", height: "32px", borderRadius: "8px",
-          background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: "14px", fontWeight: "700", color: "#fff",
-        }}>Z</div>
-        <span style={{ fontSize: "18px", fontWeight: "900", color: "#f0f0f4", letterSpacing: "-0.02em" }}>
-          Zeropoint
-        </span>
-      </Link>
+      <div style={{
+          width: "100%", maxWidth: "1280px", padding: "0 60px",
+          display: "flex", alignItems: "center", justifyContent: "space-between"
+      }}>
+          {/* Logo */}
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+            <div style={{
+              width: "32px", height: "32px", borderRadius: "8px",
+              background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "14px", fontWeight: "700", color: "#fff",
+            }}>Z</div>
+            <span style={{ fontSize: "18px", fontWeight: "900", color: "#f0f0f4", letterSpacing: "-0.02em" }}>
+              Zeropoint
+            </span>
+          </Link>
 
-      {/* Nav Links */}
-      <nav style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        {nav.map(item => {
-          const active = path === item.href || path?.startsWith(item.href + "/")
-          return (
-            <button key={item.href} onClick={() => handleNav(item.href)} style={{
-                display: "flex", alignItems: "center", gap: "8px",
-                padding: "8px 16px", borderRadius: "99px",
-                fontSize: "13px", fontWeight: active ? "700" : "600",
-                color: active ? "#fff" : "#8b8b99",
-                background: active ? "rgba(124,58,237,0.15)" : "transparent",
-                border: "none", cursor: "pointer",
-                transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
-            }}
-            onMouseEnter={e => { if (!active) { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(255,255,255,0.04)" } }}
-            onMouseLeave={e => { if (!active) { e.currentTarget.style.color = "#8b8b99"; e.currentTarget.style.background = "transparent" } }}
-            >
-                <span style={{ color: active ? "#a78bfa" : "currentColor" }}>{item.icon}</span>
-                {item.label}
-            </button>
-          )
-        })}
-      </nav>
+          {/* Nav Links */}
+          <nav style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            {nav.map(item => {
+              const active = path === item.href || path?.startsWith(item.href + "/")
+              return (
+                <button key={item.href} onClick={() => handleNav(item.href)} style={{
+                    display: "flex", alignItems: "center", gap: "8px",
+                    padding: "8px 16px", borderRadius: "99px",
+                    fontSize: "13px", fontWeight: active ? "700" : "600",
+                    color: active ? "#fff" : "#8b8b99",
+                    background: active ? "rgba(124,58,237,0.15)" : "transparent",
+                    border: "none", cursor: "pointer",
+                    transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+                }}
+                onMouseEnter={e => { if (!active) { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(255,255,255,0.04)" } }}
+                onMouseLeave={e => { if (!active) { e.currentTarget.style.color = "#8b8b99"; e.currentTarget.style.background = "transparent" } }}
+                >
+                    <span style={{ color: active ? "#a78bfa" : "currentColor" }}>{item.icon}</span>
+                    {item.label}
+                </button>
+              )
+            })}
+          </nav>
 
-      {/* User Section */}
-      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          {user ? (
-              <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                      <div style={{ width: "32px", height: "32px", borderRadius: "10px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "900", color: "#fff" }}>
-                          {user.email?.[0].toUpperCase()}
+          {/* User Section */}
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+              {user ? (
+                  <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                          <div style={{ width: "32px", height: "32px", borderRadius: "10px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "900", color: "#fff" }}>
+                              {user.email?.[0].toUpperCase()}
+                          </div>
+                          <div>
+                              <p style={{ fontSize: "12px", fontWeight: "800", color: "#f0f0f4" }}>{user.email?.split('@')[0]}</p>
+                          </div>
                       </div>
-                      <div>
-                          <p style={{ fontSize: "12px", fontWeight: "800", color: "#f0f0f4" }}>{user.email?.split('@')[0]}</p>
-                      </div>
+                      <button onClick={signOut} className="btn-secondary" style={{ padding: "8px 16px", fontSize: "12px" }}>Sign Out</button>
                   </div>
-                  <button onClick={signOut} className="btn-secondary" style={{ padding: "8px 16px", fontSize: "12px" }}>Sign Out</button>
-              </div>
-          ) : (
-              <button className="btn-primary" onClick={openLogin} style={{ padding: "10px 24px", borderRadius: "99px", fontSize: "13px" }}>
-                  Access Study Hub
-              </button>
-          )}
+              ) : (
+                  <button className="btn-primary" onClick={openLogin} style={{ padding: "10px 24px", borderRadius: "99px", fontSize: "13px" }}>
+                      Access Study Hub
+                  </button>
+              )}
+          </div>
       </div>
     </header>
   )

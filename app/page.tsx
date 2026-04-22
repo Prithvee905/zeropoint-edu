@@ -15,9 +15,9 @@ export default function Home() {
     <div style={{ paddingBottom: "100px" }}>
       {/* Hero Section */}
       <div style={{ 
-          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", 
-          minHeight: "80vh", textAlign: "center", position: "relative",
-          padding: "20px 0"
+          display: "flex", flexDirection: "column", alignItems: "center", 
+          minHeight: "calc(100vh - 72px)", textAlign: "center", position: "relative",
+          padding: "10vh 0"
       }}>
         
         {/* Abstract shapes for premium feel */}
