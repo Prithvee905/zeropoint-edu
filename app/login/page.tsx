@@ -47,17 +47,17 @@ export default function LoginPage() {
         }}>
             <div 
                 style={{
-                    width: "100%", maxWidth: "440px",
-                    background: "linear-gradient(145deg, var(--bg-raised) 0%, var(--bg) 100%)",
-                    border: "1px solid rgba(124,58,237,0.3)",
-                    borderRadius: "28px", 
-                    boxShadow: "0 40px 100px rgba(0,0,0,0.5), 0 0 40px rgba(124,58,237,0.15)",
+                    width: "100%", maxWidth: "380px",
+                    background: "var(--bg-raised)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "24px", 
+                    boxShadow: "0 24px 60px rgba(0,0,0,0.1), 0 0 40px rgba(124,58,237,0.1)",
                     position: "relative", overflow: "hidden",
                     animation: "scalePop 0.4s cubic-bezier(0.16, 1, 0.3, 1)"
                 }}
                 className="auth-modal-card"
             >
-                <div style={{ padding: "48px 40px" }} className="auth-modal-content">
+                <div style={{ padding: "32px 28px" }} className="auth-modal-content">
                     {/* Header */}
                     <div style={{ textAlign: "center", marginBottom: "32px" }}>
                         <div style={{ inlineSize: "52px", height: "52px", background: "linear-gradient(135deg, var(--purple), #4f46e5)", borderRadius: "14px", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: "22px", fontWeight: "900", color: "#fff", boxShadow: "0 12px 24px rgba(124,58,237,0.35)" }}>Z</div>
@@ -77,7 +77,7 @@ export default function LoginPage() {
                                 type="email" required
                                 className="input" placeholder="name@example.com"
                                 value={email} onChange={e => setEmail(e.target.value)}
-                                style={{ width: "100%", padding: "16px", borderRadius: "14px", background: "rgba(var(--invert-rgb),0.02)", border: "1px solid rgba(var(--invert-rgb),0.06)", fontSize: "15px" }}
+                                style={{ width: "100%", padding: "14px", borderRadius: "12px", background: "rgba(var(--invert-rgb),0.02)", border: "1px solid rgba(var(--invert-rgb),0.06)", fontSize: "15px", color: "var(--text-1)" }}
                             />
                         </div>
                         <div>
@@ -86,7 +86,7 @@ export default function LoginPage() {
                                 type="password" required
                                 className="input" placeholder="••••••••"
                                 value={password} onChange={e => setPassword(e.target.value)}
-                                style={{ width: "100%", padding: "16px", borderRadius: "14px", background: "rgba(var(--invert-rgb),0.02)", border: "1px solid rgba(var(--invert-rgb),0.06)", fontSize: "15px" }}
+                                style={{ width: "100%", padding: "14px", borderRadius: "12px", background: "rgba(var(--invert-rgb),0.02)", border: "1px solid rgba(var(--invert-rgb),0.06)", fontSize: "15px", color: "var(--text-1)" }}
                             />
                         </div>
 
@@ -101,11 +101,7 @@ export default function LoginPage() {
                             </p>
                         )}
 
-                        <button 
-                            type="submit" disabled={loading}
-                            className="btn-primary" 
-                            style={{ width: "100%", padding: "16px", borderRadius: "16px", fontSize: "15px", fontWeight: "800", marginTop: "8px", color: "#fff", boxShadow: "0 12px 24px rgba(124,58,237,0.3)" }}
-                        >
+                        <button type="submit" disabled={loading} className="btn-primary" style={{ width: "100%", padding: "14px", borderRadius: "14px", fontSize: "15px", fontWeight: "800", marginTop: "8px" }}>
                             {loading ? <span className="spinner" style={{ width: "16px", height: "16px" }} /> : (isLogin ? "Sign In" : "Create Account")}
                         </button>
                     </form>
