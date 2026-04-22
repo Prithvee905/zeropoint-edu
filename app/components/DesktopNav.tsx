@@ -24,8 +24,8 @@ export default function DesktopNav() {
   return (
     <header className="desktop-only-flex" style={{
       position: "fixed", top: 0, left: 0, right: 0, height: "72px",
-      background: "rgba(12,12,14,0.85)", backdropFilter: "blur(20px)",
-      borderBottom: "1px solid rgba(255,255,255,0.08)",
+      background: "rgba(var(--bg-rgb),0.85)", backdropFilter: "blur(20px)",
+      borderBottom: "1px solid rgba(var(--invert-rgb),0.08)",
       zIndex: 900, display: "flex", justifyContent: "center"
     }}>
       <div style={{
@@ -36,11 +36,11 @@ export default function DesktopNav() {
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
             <div style={{
               width: "32px", height: "32px", borderRadius: "8px",
-              background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+              background: "linear-gradient(135deg, var(--purple), #4f46e5)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "14px", fontWeight: "700", color: "#fff",
+              fontSize: "14px", fontWeight: "700", color: "var(--text-1)",
             }}>Z</div>
-            <span style={{ fontSize: "18px", fontWeight: "900", color: "#f0f0f4", letterSpacing: "-0.02em" }}>
+            <span style={{ fontSize: "18px", fontWeight: "900", color: "var(--text-1)", letterSpacing: "-0.02em" }}>
               Zeropoint
             </span>
           </Link>
@@ -54,15 +54,15 @@ export default function DesktopNav() {
                     display: "flex", alignItems: "center", gap: "8px",
                     padding: "8px 16px", borderRadius: "99px",
                     fontSize: "13px", fontWeight: active ? "700" : "600",
-                    color: active ? "#fff" : "#8b8b99",
+                    color: active ? "#fff" : "var(--text-2)",
                     background: active ? "rgba(124,58,237,0.15)" : "transparent",
                     border: "none", cursor: "pointer",
                     transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
-                onMouseEnter={e => { if (!active) { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(255,255,255,0.04)" } }}
-                onMouseLeave={e => { if (!active) { e.currentTarget.style.color = "#8b8b99"; e.currentTarget.style.background = "transparent" } }}
+                onMouseEnter={e => { if (!active) { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(var(--invert-rgb),0.04)" } }}
+                onMouseLeave={e => { if (!active) { e.currentTarget.style.color = "var(--text-2)"; e.currentTarget.style.background = "transparent" } }}
                 >
-                    <span style={{ color: active ? "#a78bfa" : "currentColor" }}>{item.icon}</span>
+                    <span style={{ color: active ? "var(--purple-light)" : "currentColor" }}>{item.icon}</span>
                     {item.label}
                 </button>
               )
@@ -74,11 +74,11 @@ export default function DesktopNav() {
               {user ? (
                   <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                          <div style={{ width: "32px", height: "32px", borderRadius: "10px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "900", color: "#fff" }}>
+                          <div style={{ width: "32px", height: "32px", borderRadius: "10px", background: "linear-gradient(135deg, var(--purple), #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "900", color: "var(--text-1)" }}>
                               {user.email?.[0].toUpperCase()}
                           </div>
                           <div>
-                              <p style={{ fontSize: "12px", fontWeight: "800", color: "#f0f0f4" }}>{user.email?.split('@')[0]}</p>
+                              <p style={{ fontSize: "12px", fontWeight: "800", color: "var(--text-1)" }}>{user.email?.split('@')[0]}</p>
                           </div>
                       </div>
                       <button onClick={signOut} className="btn-secondary" style={{ padding: "8px 16px", fontSize: "12px" }}>Sign Out</button>

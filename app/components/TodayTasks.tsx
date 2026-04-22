@@ -60,12 +60,12 @@ export default function TodayTasks() {
 
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div style={{ fontSize: "11px", fontWeight: "600", color: "#52525e", textTransform: "uppercase", letterSpacing: "0.07em" }}>Current Topic</div>
+        <div style={{ fontSize: "11px", fontWeight: "600", color: "var(--text-3)", textTransform: "uppercase", letterSpacing: "0.07em" }}>Current Topic</div>
         {tasks.length > 0 && (
           <span style={{
             fontSize: "11px", fontWeight: "500", padding: "2px 9px", borderRadius: "99px",
-            background: allDone ? "rgba(22,163,74,0.1)" : "rgba(255,255,255,0.04)",
-            color: allDone ? "#4ade80" : "#52525e", border: `1px solid ${allDone ? "rgba(22,163,74,0.2)" : "rgba(255,255,255,0.06)"}`
+            background: allDone ? "rgba(22,163,74,0.1)" : "rgba(var(--invert-rgb),0.04)",
+            color: allDone ? "var(--green-light)" : "var(--text-3)", border: `1px solid ${allDone ? "rgba(22,163,74,0.2)" : "rgba(var(--invert-rgb),0.06)"}`
           }}>{done}/{tasks.length}</span>
         )}
       </div>
@@ -74,28 +74,28 @@ export default function TodayTasks() {
 
       {/* Tasks */}
       {tasks.length === 0 ? (
-        <p style={{ fontSize: "13px", color: "#52525e", padding: "8px 0" }}>No active plan. <a href="/onboarding" style={{ color: "#a78bfa" }}>Create one →</a></p>
+        <p style={{ fontSize: "13px", color: "var(--text-3)", padding: "8px 0" }}>No active plan. <a href="/onboarding" style={{ color: "var(--purple-light)" }}>Create one →</a></p>
       ) : (
         <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "6px" }}>
           {tasks.map(t => (
             <li key={t.id} onClick={() => toggle(t.id, t.done)}
               style={{
                 display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", borderRadius: "8px", cursor: "pointer",
-                background: t.done ? "rgba(22,163,74,0.05)" : "rgba(255,255,255,0.02)",
-                border: `1px solid ${t.done ? "rgba(22,163,74,0.1)" : "rgba(255,255,255,0.05)"}`,
+                background: t.done ? "rgba(22,163,74,0.05)" : "rgba(var(--invert-rgb),0.02)",
+                border: `1px solid ${t.done ? "rgba(22,163,74,0.1)" : "rgba(var(--invert-rgb),0.05)"}`,
                 transition: "all 0.12s",
               }}
             >
               {/* Checkbox */}
               <div style={{
                 width: "16px", height: "16px", borderRadius: "50%", flexShrink: 0,
-                border: `1.5px solid ${t.done ? "#4ade80" : "#3f3f48"}`,
+                border: `1.5px solid ${t.done ? "var(--green-light)" : "var(--text-4)"}`,
                 background: t.done ? "rgba(22,163,74,0.2)" : "transparent",
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
-                {t.done && <svg width="8" height="8" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" fill="none" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                {t.done && <svg width="8" height="8" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" fill="none" stroke="var(--green-light)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
               </div>
-              <span style={{ fontSize: "13px", color: t.done ? "#52525e" : "#c8c8d4", textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
+              <span style={{ fontSize: "13px", color: t.done ? "var(--text-3)" : "#c8c8d4", textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
             </li>
           ))}
         </ul>

@@ -51,7 +51,7 @@ export default function FlashcardsPage() {
     if (loading) return (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "60vh", gap: "16px" }}>
             <div className="spinner" />
-            <p style={{ color: "#52525e", fontSize: "13px" }}>Generating flashcards...</p>
+            <p style={{ color: "var(--text-3)", fontSize: "13px" }}>Generating flashcards...</p>
         </div>
     )
 
@@ -68,33 +68,33 @@ export default function FlashcardsPage() {
                     
                     <div style={{ position: "relative" }}>
                         {/* Icon */}
-                        <div style={{ width: "72px", height: "72px", margin: "0 auto 24px", borderRadius: "20px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "32px", boxShadow: "0 8px 32px rgba(124,58,237,0.3)" }}>
+                        <div style={{ width: "72px", height: "72px", margin: "0 auto 24px", borderRadius: "20px", background: "linear-gradient(135deg, var(--purple), #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "32px", boxShadow: "0 8px 32px rgba(124,58,237,0.3)" }}>
                             🎉
                         </div>
                         
-                        <h2 style={{ fontSize: "28px", fontWeight: "800", color: "#fff", marginBottom: "8px" }}>Session Complete!</h2>
-                        <p style={{ color: "#6b6b78", fontSize: "14px", marginBottom: "32px" }}>
+                        <h2 style={{ fontSize: "28px", fontWeight: "800", color: "var(--text-1)", marginBottom: "8px" }}>Session Complete!</h2>
+                        <p style={{ color: "var(--text-3)", fontSize: "14px", marginBottom: "32px" }}>
                             Great work! You mastered {knownCount} out of {flashcards.length} cards.
                         </p>
 
                         {/* Score ring */}
                         <div style={{ width: "120px", height: "120px", margin: "0 auto 32px", position: "relative" }}>
                             <svg width="120" height="120" viewBox="0 0 120 120" style={{ transform: "rotate(-90deg)" }}>
-                                <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
+                                <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(var(--invert-rgb),0.06)" strokeWidth="8" />
                                 <circle cx="60" cy="60" r="52" fill="none" stroke="url(#grad)" strokeWidth="8" strokeLinecap="round"
                                     strokeDasharray={`${percent * 3.27} ${327 - percent * 3.27}`}
                                     style={{ transition: "stroke-dasharray 1.5s cubic-bezier(0.16,1,0.3,1)" }}
                                 />
                                 <defs>
                                     <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#7c3aed" />
+                                        <stop offset="0%" stopColor="var(--purple)" />
                                         <stop offset="100%" stopColor="#06b6d4" />
                                     </linearGradient>
                                 </defs>
                             </svg>
                             <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                                <span style={{ fontSize: "28px", fontWeight: "800", color: "#fff" }}>{percent}%</span>
-                                <span style={{ fontSize: "10px", color: "#52525e", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.1em" }}>Score</span>
+                                <span style={{ fontSize: "28px", fontWeight: "800", color: "var(--text-1)" }}>{percent}%</span>
+                                <span style={{ fontSize: "10px", color: "var(--text-3)", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.1em" }}>Score</span>
                             </div>
                         </div>
 
@@ -117,7 +117,7 @@ export default function FlashcardsPage() {
 
     // ── NO CARDS ───────────────────────────────────────────
     if (flashcards.length === 0) return (
-        <div style={{ textAlign: "center", paddingTop: "80px", color: "#52525e" }}>No flashcards generated.</div>
+        <div style={{ textAlign: "center", paddingTop: "80px", color: "var(--text-3)" }}>No flashcards generated.</div>
     )
 
     const card = flashcards[currentIndex]
@@ -130,21 +130,21 @@ export default function FlashcardsPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
                 <div>
                     <h1 style={{ fontSize: "24px", fontWeight: "800", marginBottom: "4px" }}>Flashcards</h1>
-                    <p style={{ fontSize: "12px", color: "#52525e" }}>Tap the card to flip it</p>
+                    <p style={{ fontSize: "12px", color: "var(--text-3)" }}>Tap the card to flip it</p>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <span style={{ fontSize: "22px", fontWeight: "800", color: "#a78bfa" }}>{currentIndex + 1}</span>
-                    <span style={{ fontSize: "14px", color: "#3f3f48" }}>/</span>
-                    <span style={{ fontSize: "14px", color: "#52525e" }}>{flashcards.length}</span>
+                    <span style={{ fontSize: "22px", fontWeight: "800", color: "var(--purple-light)" }}>{currentIndex + 1}</span>
+                    <span style={{ fontSize: "14px", color: "var(--text-4)" }}>/</span>
+                    <span style={{ fontSize: "14px", color: "var(--text-3)" }}>{flashcards.length}</span>
                 </div>
             </div>
 
             {/* Progress bar */}
-            <div style={{ height: "3px", background: "rgba(255,255,255,0.06)", borderRadius: "4px", marginBottom: "32px", overflow: "hidden" }}>
+            <div style={{ height: "3px", background: "rgba(var(--invert-rgb),0.06)", borderRadius: "4px", marginBottom: "32px", overflow: "hidden" }}>
                 <div style={{
                     height: "100%",
                     width: `${((currentIndex + 1) / flashcards.length) * 100}%`,
-                    background: "linear-gradient(90deg, #7c3aed, #06b6d4)",
+                    background: "linear-gradient(90deg, var(--purple), #06b6d4)",
                     borderRadius: "4px",
                     transition: "width 0.5s cubic-bezier(0.16,1,0.3,1)",
                     boxShadow: "0 0 12px rgba(124,58,237,0.4)",
@@ -169,16 +169,16 @@ export default function FlashcardsPage() {
                         position: "absolute", inset: 0,
                         backfaceVisibility: "hidden",
                         borderRadius: "20px",
-                        background: "linear-gradient(145deg, #1a1a2e 0%, #16162a 100%)",
+                        background: "linear-gradient(145deg, var(--bg-raised) 0%, #16162a 100%)",
                         border: "1px solid rgba(124,58,237,0.15)",
                         display: "flex", flexDirection: "column",
                         alignItems: "center", justifyContent: "center",
                         padding: "40px 32px",
                         textAlign: "center",
-                        boxShadow: "0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
+                        boxShadow: "0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(var(--invert-rgb),0.05)",
                     }}>
                         <span style={{
-                            fontSize: "10px", fontWeight: "700", color: "#7c3aed",
+                            fontSize: "10px", fontWeight: "700", color: "var(--purple)",
                             textTransform: "uppercase", letterSpacing: "0.15em",
                             marginBottom: "20px",
                             padding: "5px 14px", borderRadius: "6px",
@@ -187,7 +187,7 @@ export default function FlashcardsPage() {
                         <p style={{ fontSize: "20px", fontWeight: "600", color: "#e0e0f0", lineHeight: "1.5" }}>
                             {card.front}
                         </p>
-                        <p style={{ position: "absolute", bottom: "20px", fontSize: "11px", color: "#3f3f48" }}>
+                        <p style={{ position: "absolute", bottom: "20px", fontSize: "11px", color: "var(--text-4)" }}>
                             Click to reveal →
                         </p>
                     </div>
@@ -231,15 +231,15 @@ export default function FlashcardsPage() {
                         onClick={(e) => { e.stopPropagation(); next() }}
                         style={{
                             flex: 1, padding: "16px", borderRadius: "14px",
-                            background: "rgba(255,255,255,0.04)",
-                            border: "1px solid rgba(255,255,255,0.08)",
-                            color: "#8b8b99", fontSize: "14px", fontWeight: "600",
+                            background: "rgba(var(--invert-rgb),0.04)",
+                            border: "1px solid rgba(var(--invert-rgb),0.08)",
+                            color: "var(--text-2)", fontSize: "14px", fontWeight: "600",
                             cursor: "pointer", fontFamily: "inherit",
                             transition: "all 0.2s",
                             display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                         }}
                         onMouseEnter={e => { const t = e.currentTarget; t.style.background = "rgba(239,68,68,0.06)"; t.style.borderColor = "rgba(239,68,68,0.2)"; t.style.color = "#f87171" }}
-                        onMouseLeave={e => { const t = e.currentTarget; t.style.background = "rgba(255,255,255,0.04)"; t.style.borderColor = "rgba(255,255,255,0.08)"; t.style.color = "#8b8b99" }}
+                        onMouseLeave={e => { const t = e.currentTarget; t.style.background = "rgba(var(--invert-rgb),0.04)"; t.style.borderColor = "rgba(var(--invert-rgb),0.08)"; t.style.color = "var(--text-2)" }}
                     >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
@@ -250,9 +250,9 @@ export default function FlashcardsPage() {
                         onClick={(e) => { e.stopPropagation(); markKnown() }}
                         style={{
                             flex: 1, padding: "16px", borderRadius: "14px",
-                            background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+                            background: "linear-gradient(135deg, var(--purple), #4f46e5)",
                             border: "none",
-                            color: "#fff", fontSize: "14px", fontWeight: "700",
+                            color: "var(--text-1)", fontSize: "14px", fontWeight: "700",
                             cursor: "pointer", fontFamily: "inherit",
                             transition: "all 0.2s",
                             display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
@@ -277,10 +277,10 @@ export default function FlashcardsPage() {
                         height: "8px",
                         borderRadius: "4px",
                         background: known.has(i)
-                            ? "#4ade80"
+                            ? "var(--green-light)"
                             : i === currentIndex
-                                ? "linear-gradient(90deg, #7c3aed, #06b6d4)"
-                                : "rgba(255,255,255,0.08)",
+                                ? "linear-gradient(90deg, var(--purple), #06b6d4)"
+                                : "rgba(var(--invert-rgb),0.08)",
                         transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
                         ...(i === currentIndex ? { boxShadow: "0 0 10px rgba(124,58,237,0.4)" } : {}),
                     }} />

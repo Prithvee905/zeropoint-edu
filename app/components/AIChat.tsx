@@ -42,17 +42,17 @@ export default function AIChat({ topicId }: { topicId?: string }) {
         {msgs.length === 0 && (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, textAlign: "center", paddingTop: "60px", gap: "10px" }}>
             <span style={{ fontSize: "28px", opacity: 0.3 }}>✦</span>
-            <p style={{ color: "#52525e", fontSize: "14px" }}>Ask anything — I'll explain it in depth</p>
+            <p style={{ color: "var(--text-3)", fontSize: "14px" }}>Ask anything — I'll explain it in depth</p>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "6px", marginTop: "8px", maxWidth: "420px" }}>
               {["What is this topic?", "Give me examples", "Explain step by step", "What are the key concepts?"].map(q => (
                 <button key={q} onClick={() => setInput(q)} style={{
                   fontSize: "12px", padding: "5px 12px", borderRadius: "99px",
                   background: "var(--bg-raised)", border: "1px solid var(--border)",
-                  color: "#8b8b99", cursor: "pointer", fontFamily: "inherit",
+                  color: "var(--text-2)", cursor: "pointer", fontFamily: "inherit",
                   transition: "all 0.15s",
                 }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(124,58,237,0.4)"; (e.currentTarget as HTMLElement).style.color = "#a78bfa" }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.color = "#8b8b99" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(124,58,237,0.4)"; (e.currentTarget as HTMLElement).style.color = "var(--purple-light)" }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.color = "var(--text-2)" }}
                 >{q}</button>
               ))}
             </div>
@@ -67,9 +67,9 @@ export default function AIChat({ topicId }: { topicId?: string }) {
             {m.role === "assistant" && (
               <div style={{
                 width: "26px", height: "26px", borderRadius: "7px", flexShrink: 0, marginTop: "2px",
-                background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+                background: "linear-gradient(135deg, var(--purple), #4f46e5)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: "11px", fontWeight: "700", color: "#fff",
+                fontSize: "11px", fontWeight: "700", color: "var(--text-1)",
               }}>Z</div>
             )}
 
@@ -78,7 +78,7 @@ export default function AIChat({ topicId }: { topicId?: string }) {
               maxWidth: m.role === "user" ? "70%" : "85%",
               padding: m.role === "user" ? "10px 14px" : "16px 18px",
               borderRadius: m.role === "user" ? "12px 12px 4px 12px" : "4px 12px 12px 12px",
-              background: m.role === "user" ? "#7c3aed" : "var(--bg-raised)",
+              background: m.role === "user" ? "var(--purple)" : "var(--bg-raised)",
               color: m.role === "user" ? "#fff" : "#c8c8d4",
               border: m.role === "assistant" ? "1px solid var(--border)" : "none",
               fontSize: "14px", lineHeight: "1.7", fontFamily: "inherit",
@@ -102,12 +102,12 @@ export default function AIChat({ topicId }: { topicId?: string }) {
                         <code style={{
                           background: "rgba(124,58,237,0.12)", border: "1px solid rgba(124,58,237,0.2)",
                           borderRadius: "5px", padding: "2px 7px", fontSize: "12px",
-                          color: "#a78bfa", fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+                          color: "var(--purple-light)", fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
                         }}>{children}</code>
                       ),
                       pre: ({ children }) => (
                         <pre style={{
-                          background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.08)",
+                          background: "rgba(0,0,0,0.3)", border: "1px solid rgba(var(--invert-rgb),0.08)",
                           borderRadius: "8px", padding: "14px 16px", overflow: "auto",
                           fontSize: "12px", margin: "10px 0", lineHeight: "1.6",
                           fontFamily: "'JetBrains Mono', monospace",
@@ -115,8 +115,8 @@ export default function AIChat({ topicId }: { topicId?: string }) {
                       ),
                       blockquote: ({ children }) => (
                         <blockquote style={{
-                          borderLeft: "3px solid #7c3aed", paddingLeft: "14px",
-                          margin: "10px 0", color: "#8b8b99", fontStyle: "italic",
+                          borderLeft: "3px solid var(--purple)", paddingLeft: "14px",
+                          margin: "10px 0", color: "var(--text-2)", fontStyle: "italic",
                         }}>{children}</blockquote>
                       ),
                       hr: () => <hr style={{ border: "none", borderTop: "1px solid var(--border)", margin: "16px 0" }} />,
@@ -133,9 +133,9 @@ export default function AIChat({ topicId }: { topicId?: string }) {
           <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
             <div style={{
               width: "26px", height: "26px", borderRadius: "7px", flexShrink: 0,
-              background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+              background: "linear-gradient(135deg, var(--purple), #4f46e5)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "11px", fontWeight: "700", color: "#fff",
+              fontSize: "11px", fontWeight: "700", color: "var(--text-1)",
             }}>Z</div>
             <div style={{
               background: "var(--bg-raised)", border: "1px solid var(--border)",
@@ -144,7 +144,7 @@ export default function AIChat({ topicId }: { topicId?: string }) {
             }}>
               {[0, 1, 2].map(i => (
                 <div key={i} style={{
-                  width: "6px", height: "6px", borderRadius: "50%", background: "#52525e",
+                  width: "6px", height: "6px", borderRadius: "50%", background: "var(--text-3)",
                   animation: "bounce 1.2s ease infinite",
                   animationDelay: `${i * 0.2}s`,
                 }} />
@@ -176,7 +176,7 @@ export default function AIChat({ topicId }: { topicId?: string }) {
             {loading ? <span className="spinner" style={{ width: "14px", height: "14px" }} /> : "Send"}
           </button>
         </div>
-        <p style={{ fontSize: "11px", color: "#3f3f48", marginTop: "8px" }}>
+        <p style={{ fontSize: "11px", color: "var(--text-4)", marginTop: "8px" }}>
           Shift+Enter for a new line · Context-aware: knows your syllabus & weak areas
         </p>
       </div>

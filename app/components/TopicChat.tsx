@@ -136,11 +136,11 @@ export default function TopicChat({ topicId, topicTitle }: Props) {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <div style={{ width: "24px", height: "24px", borderRadius: "6px", background: "linear-gradient(135deg,#7c3aed,#4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: "700", color: "#fff" }}>Z</div>
+          <div style={{ width: "24px", height: "24px", borderRadius: "6px", background: "linear-gradient(135deg,var(--purple),#4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: "700", color: "var(--text-1)" }}>Z</div>
           <span style={{ fontSize: "12px", fontWeight: "600", color: "var(--text-2)", textTransform: "uppercase", letterSpacing: "0.07em" }}>Ask the Tutor</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-          <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#4ade80" }} />
+          <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "var(--green-light)" }} />
           <span style={{ fontSize: "10px", color: "var(--text-3)" }}>History Persistent</span>
         </div>
       </div>
@@ -175,7 +175,7 @@ export default function TopicChat({ topicId, topicTitle }: Props) {
             <div key={i} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
               <div style={{ flexShrink: 0, marginTop: "2px" }}>
                 {m.role === "assistant"
-                  ? <div style={{ width: "26px", height: "26px", borderRadius: "7px", background: "linear-gradient(135deg,#7c3aed,#4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: "700", color: "#fff" }}>Z</div>
+                  ? <div style={{ width: "26px", height: "26px", borderRadius: "7px", background: "linear-gradient(135deg,var(--purple),#4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: "700", color: "var(--text-1)" }}>Z</div>
                   : <div style={{ width: "26px", height: "26px", borderRadius: "7px", background: "var(--bg-raised)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: "600", color: "var(--text-2)" }}>U</div>
                 }
               </div>
@@ -191,7 +191,7 @@ export default function TopicChat({ topicId, topicTitle }: Props) {
                     p: ({ children }) => <p style={{ margin: "0 0 16px", color: "var(--text-2)" }}>{children}</p>,
                     ul: ({ children }) => <ul style={{ margin: "8px 0 16px", paddingLeft: "18px" }}>{children}</ul>,
                     li: ({ children }) => <li style={{ margin: "6px 0", color: "var(--text-2)" }}>{children}</li>,
-                    strong: ({ children }) => <strong style={{ color: "#fff", fontWeight: "600" }}>{children}</strong>,
+                    strong: ({ children }) => <strong style={{ color: "var(--text-1)", fontWeight: "600" }}>{children}</strong>,
                     code: ({ children }) => <code style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.2)", borderRadius: "6px", padding: "2px 6px", fontSize: "12px", color: "var(--purple-light)", fontFamily: "monospace" }}>{children}</code>,
                     blockquote: ({ children }) => (
                       <div style={{ 
@@ -201,7 +201,7 @@ export default function TopicChat({ topicId, topicTitle }: Props) {
                         padding: "12px 16px",
                         margin: "16px 0",
                         fontStyle: "italic",
-                        color: "#fff"
+                        color: "var(--text-1)"
                       }}>{children}</div>
                     ),
                     hr: () => <hr style={{ border: "none", borderTop: "1px solid var(--border)", margin: "24px 0" }} />,
@@ -213,7 +213,7 @@ export default function TopicChat({ topicId, topicTitle }: Props) {
         )}
         {loading && (
           <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
-            <div style={{ width: "26px", height: "26px", borderRadius: "7px", background: "linear-gradient(135deg,#7c3aed,#4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: "700", color: "#fff" }}>Z</div>
+            <div style={{ width: "26px", height: "26px", borderRadius: "7px", background: "linear-gradient(135deg,var(--purple),#4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: "700", color: "var(--text-1)" }}>Z</div>
             <div style={{ paddingTop: "6px" }}>
               <div className="spinner" style={{ width: "12px", height: "12px" }} />
             </div>

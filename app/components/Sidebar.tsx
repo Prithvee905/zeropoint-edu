@@ -27,8 +27,8 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
   return (
     <aside style={{
       width: "100%", height: "100%", flexShrink: 0,
-      background: "#0c0c0e",
-      borderRight: "1px solid rgba(255,255,255,0.06)",
+      background: "var(--bg)",
+      borderRight: "1px solid rgba(var(--invert-rgb),0.06)",
       display: "flex", flexDirection: "column",
       padding: "0",
     }}>
@@ -43,11 +43,11 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         <Link href="/" onClick={onClose} style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
           <div style={{
             width: "30px", height: "30px", borderRadius: "8px",
-            background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+            background: "linear-gradient(135deg, var(--purple), #4f46e5)",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: "14px", fontWeight: "700", color: "#fff",
+            fontSize: "14px", fontWeight: "700", color: "var(--text-1)",
           }}>Z</div>
-          <span style={{ fontSize: "16px", fontWeight: "800", color: "#f0f0f4", letterSpacing: "-0.02em" }}>
+          <span style={{ fontSize: "16px", fontWeight: "800", color: "var(--text-1)", letterSpacing: "-0.02em" }}>
             Zeropoint
           </span>
         </Link>
@@ -57,8 +57,8 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
             className="mobile-close-btn" 
             onClick={onClose} 
             style={{ 
-                background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", 
-                color: "#8b8b99", cursor: "pointer", display: "none",
+                background: "rgba(var(--invert-rgb),0.03)", border: "1px solid rgba(var(--invert-rgb),0.06)", 
+                color: "var(--text-2)", cursor: "pointer", display: "none",
                 width: "36px", height: "36px", borderRadius: "50%",
                 alignItems: "center", justifyContent: "center"
             }}
@@ -68,7 +68,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       </div>
 
       <div style={{ flex: 1, overflowY: "auto", padding: "12px 14px" }}>
-        <p style={{ fontSize: "10px", fontWeight: "800", color: "#3f3f48", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "16px", marginLeft: "10px" }}>Study Hub</p>
+        <p style={{ fontSize: "10px", fontWeight: "800", color: "var(--text-4)", textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "16px", marginLeft: "10px" }}>Study Hub</p>
         <nav style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
             {nav.map(item => {
             const active = path === item.href || path?.startsWith(item.href + "/")
@@ -78,13 +78,13 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                     display: "flex", alignItems: "center", gap: "12px",
                     padding: "12px 16px", borderRadius: "12px",
                     fontSize: "14px", fontWeight: active ? "700" : "500",
-                    color: active ? "#fff" : "#6b6b78",
+                    color: active ? "#fff" : "var(--text-3)",
                     background: active ? "rgba(124,58,237,0.15)" : "transparent",
                     transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
                 className="nav-item"
                 >
-                    <span style={{ color: active ? "#a78bfa" : "currentColor", flexShrink: 0, opacity: active ? 1 : 0.6 }}>{item.icon}</span>
+                    <span style={{ color: active ? "var(--purple-light)" : "currentColor", flexShrink: 0, opacity: active ? 1 : 0.6 }}>{item.icon}</span>
                     {item.label}
                 </div>
                 </div>
@@ -96,18 +96,18 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       {/* User Section / Auth */}
       <div style={{ 
           padding: "20px 20px calc(24px + env(safe-area-inset-bottom))", 
-          marginTop: "auto", borderTop: "1px solid rgba(255,255,255,0.05)", 
+          marginTop: "auto", borderTop: "1px solid rgba(var(--invert-rgb),0.05)", 
           background: "rgba(124,58,237,0.02)" 
       }}>
         {user ? (
           <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-              <div style={{ width: "32px", height: "32px", borderRadius: "10px", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "900", color: "#fff" }}>
+              <div style={{ width: "32px", height: "32px", borderRadius: "10px", background: "linear-gradient(135deg, var(--purple), #4f46e5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "900", color: "var(--text-1)" }}>
                 {user.email?.[0].toUpperCase()}
               </div>
               <div style={{ overflow: "hidden" }}>
-                  <p style={{ fontSize: "13px", fontWeight: "800", color: "#f0f0f4", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email?.split('@')[0]}</p>
-                  <p style={{ fontSize: "10px", color: "#52525e", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</p>
+                  <p style={{ fontSize: "13px", fontWeight: "800", color: "var(--text-1)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email?.split('@')[0]}</p>
+                  <p style={{ fontSize: "10px", color: "var(--text-3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</p>
               </div>
             </div>
             <button 
@@ -122,7 +122,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         ) : (
           <button 
             onClick={() => { openLogin(); if (onClose) onClose(); }}
-            style={{ width: "100%", padding: "14px", borderRadius: "14px", background: "#7c3aed", border: "none", color: "#fff", fontSize: "14px", fontWeight: "900", cursor: "pointer", boxShadow: "0 10px 20px rgba(124,58,237,0.3)", transition: "all 0.2s" }}
+            style={{ width: "100%", padding: "14px", borderRadius: "14px", background: "var(--purple)", border: "none", color: "var(--text-1)", fontSize: "14px", fontWeight: "900", cursor: "pointer", boxShadow: "0 10px 20px rgba(124,58,237,0.3)", transition: "all 0.2s" }}
             onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
             onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
           >

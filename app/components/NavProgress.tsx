@@ -44,7 +44,7 @@ export default function NavProgress() {
           height: "2px",
           width: "0%",
           opacity: 0,
-          background: "linear-gradient(90deg, #7c3aed, #a78bfa)",
+          background: "linear-gradient(90deg, var(--purple), var(--purple-light))",
           boxShadow: "0 0 8px rgba(124,58,237,0.6)",
           borderRadius: "0 2px 2px 0",
         }}

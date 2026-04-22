@@ -29,7 +29,7 @@ export default function TopicPage() {
   if (loading) return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "50vh", gap: "14px" }}>
       <div className="spinner" style={{ width: "32px", height: "32px" }} />
-      <p style={{ color: "#52525e", fontSize: "14px", fontWeight: "600" }}>Generating your lesson...</p>
+      <p style={{ color: "var(--text-3)", fontSize: "14px", fontWeight: "600" }}>Generating your lesson...</p>
     </div>
   )
 
@@ -40,13 +40,13 @@ export default function TopicPage() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <button onClick={() => router.push("/dashboard")}
             style={{ 
-                background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", 
-                cursor: "pointer", color: "#8b8b99", fontSize: "12px", fontWeight: "700",
+                background: "rgba(var(--invert-rgb),0.03)", border: "1px solid rgba(var(--invert-rgb),0.06)", 
+                cursor: "pointer", color: "var(--text-2)", fontSize: "12px", fontWeight: "700",
                 display: "flex", alignItems: "center", gap: "8px", padding: "8px 14px", borderRadius: "10px",
                 transition: "all 0.2s"
             }}
-            onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "#a78bfa"}
-            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "#8b8b99"}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = "var(--purple-light)"}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = "var(--text-2)"}
         >
             ← Back
         </button>
@@ -54,22 +54,22 @@ export default function TopicPage() {
       </div>
 
       {/* Title */}
-      <h1 style={{ fontSize: "clamp(24px, 5vw, 36px)", fontWeight: "900", letterSpacing: "-0.04em", color: "#fff", lineHeight: "1.2" }}>{title}</h1>
+      <h1 style={{ fontSize: "clamp(24px, 5vw, 36px)", fontWeight: "900", letterSpacing: "-0.04em", color: "var(--text-1)", lineHeight: "1.2" }}>{title}</h1>
 
       {/* Lesson content container */}
       <div className="card lesson-content-card" style={{ padding: "clamp(24px, 5vw, 40px)", borderRadius: "24px" }}>
         <div style={{ color: "#a0a0b0", fontSize: "15px", lineHeight: "1.8" }}>
           <ReactMarkdown components={{
-            h1: ({ children }) => <h2 style={{ fontSize: "18px", fontWeight: "900", color: "#fff", marginTop: "32px", marginBottom: "16px" }}>{children}</h2>,
+            h1: ({ children }) => <h2 style={{ fontSize: "18px", fontWeight: "900", color: "var(--text-1)", marginTop: "32px", marginBottom: "16px" }}>{children}</h2>,
             h2: ({ children }) => <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#e0e0e8", marginTop: "24px", marginBottom: "12px" }}>{children}</h3>,
             h3: ({ children }) => <h4 style={{ fontSize: "14px", fontWeight: "700", color: "#d0d0dc", marginTop: "20px", marginBottom: "10px" }}>{children}</h4>,
             p: ({ children }) => <p style={{ marginBottom: "14px", color: "#9b9ba8" }}>{children}</p>,
             ul: ({ children }) => <ul style={{ paddingLeft: "20px", marginBottom: "16px", display: "flex", flexDirection: "column", gap: "6px" }}>{children}</ul>,
             li: ({ children }) => <li style={{ color: "#9b9ba8" }}>{children}</li>,
-            strong: ({ children }) => <strong style={{ color: "#fff", fontWeight: "700" }}>{children}</strong>,
-            code: ({ children }) => <code style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.2)", borderRadius: "6px", padding: "3px 8px", fontSize: "13px", color: "#a78bfa", fontFamily: "monospace" }}>{children}</code>,
-            pre: ({ children }) => <pre style={{ background: "#0c0c0e", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "14px", padding: "18px", overflow: "auto", fontSize: "13px", margin: "20px 0", fontFamily: "monospace" }}>{children}</pre>,
-            blockquote: ({ children }) => <blockquote style={{ borderLeft: "4px solid #7c3aed", paddingLeft: "18px", margin: "20px 0", color: "#8b8b99", fontStyle: "italic", background: "rgba(124,58,237,0.02)", padding: "12px 18px", borderRadius: "0 12px 12px 0" }}>{children}</blockquote>,
+            strong: ({ children }) => <strong style={{ color: "var(--text-1)", fontWeight: "700" }}>{children}</strong>,
+            code: ({ children }) => <code style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.2)", borderRadius: "6px", padding: "3px 8px", fontSize: "13px", color: "var(--purple-light)", fontFamily: "monospace" }}>{children}</code>,
+            pre: ({ children }) => <pre style={{ background: "var(--bg)", border: "1px solid rgba(var(--invert-rgb),0.06)", borderRadius: "14px", padding: "18px", overflow: "auto", fontSize: "13px", margin: "20px 0", fontFamily: "monospace" }}>{children}</pre>,
+            blockquote: ({ children }) => <blockquote style={{ borderLeft: "4px solid var(--purple)", paddingLeft: "18px", margin: "20px 0", color: "var(--text-2)", fontStyle: "italic", background: "rgba(124,58,237,0.02)", padding: "12px 18px", borderRadius: "0 12px 12px 0" }}>{children}</blockquote>,
           }}>{summary}</ReactMarkdown>
         </div>
       </div>

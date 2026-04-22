@@ -23,11 +23,11 @@ export default function RoadmapPage() {
   if (loading) return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "40vh", gap: "12px" }}>
         <div className="spinner" />
-        <p style={{ fontSize: "12px", color: "#52525e" }}>Loading your path...</p>
+        <p style={{ fontSize: "12px", color: "var(--text-3)" }}>Loading your path...</p>
     </div>
   )
 
-  const statusColor: Record<string, string> = { completed: "#4ade80", in_progress: "#7c3aed", pending: "#3f3f48" }
+  const statusColor: Record<string, string> = { completed: "var(--green-light)", in_progress: "var(--purple)", pending: "var(--text-4)" }
   const statusLabel: Record<string, string> = { completed: "Mastered", in_progress: "Active", pending: "Waiting" }
 
   return (
@@ -37,10 +37,10 @@ export default function RoadmapPage() {
         {rm ? (
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
                 <span className="badge badge-purple" style={{ padding: "6px 14px", fontSize: "11px" }}>{rm.subject}</span>
-                <p style={{ fontSize: "14px", color: "#6b6b78", fontWeight: "500" }}>{rm.goal}</p>
+                <p style={{ fontSize: "14px", color: "var(--text-3)", fontWeight: "500" }}>{rm.goal}</p>
             </div>
         ) : (
-            <p style={{ fontSize: "14px", color: "#6b6b78" }}>Explore the architecture of your study plan.</p>
+            <p style={{ fontSize: "14px", color: "var(--text-3)" }}>Explore the architecture of your study plan.</p>
         )}
       </div>
 
@@ -50,7 +50,7 @@ export default function RoadmapPage() {
             <div className="card" style={{ padding: "64px 24px", textAlign: "center", borderStyle: "dashed", borderColor: "rgba(124,58,237,0.3)", background: "rgba(124,58,237,0.02)" }}>
                 <div style={{ width: "64px", height: "64px", background: "rgba(124,58,237,0.1)", borderRadius: "20px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px", margin: "0 auto 24px" }}>🗺️</div>
                 <h3 style={{ fontSize: "20px", fontWeight: "800", marginBottom: "12px" }}>Your roadmap starts here</h3>
-                <p style={{ color: "#6b6b78", fontSize: "14px", maxWidth: "340px", margin: "0 auto 32px", lineHeight: "1.6" }}>
+                <p style={{ color: "var(--text-3)", fontSize: "14px", maxWidth: "340px", margin: "0 auto 32px", lineHeight: "1.6" }}>
                     Once you define your goal, we'll break it down into daily segments.
                 </p>
                 <button className="btn-primary" onClick={() => router.push("/onboarding")} style={{ padding: "14px 28px", borderRadius: "14px" }}>Generate AI Roadmap</button>
@@ -59,7 +59,7 @@ export default function RoadmapPage() {
       ) : (
         <div style={{ position: "relative" }}>
           {/* Timeline line */}
-          <div style={{ position: "absolute", left: "12px", top: "20px", bottom: "20px", width: "2px", background: "rgba(255,255,255,0.05)" }} />
+          <div style={{ position: "absolute", left: "12px", top: "20px", bottom: "20px", width: "2px", background: "rgba(var(--invert-rgb),0.05)" }} />
 
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }} className="stagger">
             {topics.map(t => (
@@ -78,11 +78,11 @@ export default function RoadmapPage() {
                 <div className="card card-interactive roadmap-card" style={{ 
                     flex: 1, padding: "24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px",
                     border: t.status === 'in_progress' ? '1px solid rgba(124,58,237,0.3)' : '1px solid var(--border)',
-                    background: t.status === 'in_progress' ? 'rgba(124,58,237,0.03)' : 'rgba(255,255,255,0.01)'
+                    background: t.status === 'in_progress' ? 'rgba(124,58,237,0.03)' : 'rgba(var(--invert-rgb),0.01)'
                 }}>
                   <div style={{ flex: 1 }}>
-                    <span style={{ fontSize: "10px", fontWeight: "900", color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.15em" }}>Day {t.day_number}</span>
-                    <h3 style={{ fontSize: "16px", fontWeight: "800", color: t.status === 'pending' ? '#52525e' : '#fff', marginTop: "6px", lineHeight: "1.4" }}>{t.title}</h3>
+                    <span style={{ fontSize: "10px", fontWeight: "900", color: "var(--purple-light)", textTransform: "uppercase", letterSpacing: "0.15em" }}>Day {t.day_number}</span>
+                    <h3 style={{ fontSize: "16px", fontWeight: "800", color: t.status === 'pending' ? 'var(--text-3)' : '#fff', marginTop: "6px", lineHeight: "1.4" }}>{t.title}</h3>
                   </div>
                   
                   <div className="card-actions" style={{ display: "flex", alignItems: "center", gap: "12px" }}>

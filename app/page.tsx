@@ -24,22 +24,22 @@ export default function Home() {
         <div style={{ position: "absolute", top: "10%", left: "50%", transform: "translateX(-50%)", width: "300px", height: "300px", background: "rgba(124,58,237,0.1)", filter: "blur(100px)", borderRadius: "50%", zIndex: -1 }}></div>
 
         <span className="badge badge-purple" style={{ marginBottom: "24px", padding: "8px 18px" }}>
-          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#a78bfa", display: "inline-block", marginRight: "8px" }} />
+          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--purple-light)", display: "inline-block", marginRight: "8px" }} />
           AI-Powered Study Engine
         </span>
 
         <h1 style={{ 
             fontSize: "clamp(2.5rem, 8vw, 4.2rem)", 
             fontWeight: "900", letterSpacing: "-0.05em", lineHeight: "1.1", 
-            marginBottom: "24px", maxWidth: "880px", color: "#fff" 
+            marginBottom: "24px", maxWidth: "880px", color: "var(--text-1)" 
         }} className="hero-title">
           Forget random study.<br />
-          <span style={{ background: "linear-gradient(135deg, #a78bfa, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          <span style={{ background: "linear-gradient(135deg, var(--purple-light), #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
             Master your future.
           </span>
         </h1>
 
-        <p style={{ fontSize: "clamp(16px, 2vw, 18px)", color: "#8b8b99", maxWidth: "540px", lineHeight: "1.7", marginBottom: "40px", fontWeight: "400" }}>
+        <p style={{ fontSize: "clamp(16px, 2vw, 18px)", color: "var(--text-2)", maxWidth: "540px", lineHeight: "1.7", marginBottom: "40px", fontWeight: "400" }}>
           Upload your syllabus or goal. Zeropoint builds a custom roadmap, tutors you through every concept, and prepares you for mastery.
         </p>
 
@@ -67,10 +67,10 @@ export default function Home() {
             { icon: "🎓", title: "Personal AI Tutor", desc: "Stuck on a concept? Your tutor knows your syllabus inside out." },
             { icon: "⚡", title: "Adaptive Quizzes", desc: "Questions focus on exactly where you showed weakness today." },
           ].map(f => (
-            <div key={f.title} className="card" style={{ padding: "28px", textAlign: "left", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+            <div key={f.title} className="card" style={{ padding: "28px", textAlign: "left", background: "rgba(var(--invert-rgb),0.02)", border: "1px solid rgba(var(--invert-rgb),0.04)" }}>
               <div style={{ fontSize: "28px", marginBottom: "16px" }}>{f.icon}</div>
-              <div style={{ fontSize: "15px", fontWeight: "800", color: "#fff", marginBottom: "8px" }}>{f.title}</div>
-              <div style={{ fontSize: "13px", color: "#6b6b78", lineHeight: "1.6" }}>{f.desc}</div>
+              <div style={{ fontSize: "15px", fontWeight: "800", color: "var(--text-1)", marginBottom: "8px" }}>{f.title}</div>
+              <div style={{ fontSize: "13px", color: "var(--text-3)", lineHeight: "1.6" }}>{f.desc}</div>
             </div>
           ))}
         </div>
@@ -80,7 +80,7 @@ export default function Home() {
       <div className="fade-up" style={{ maxWidth: "1280px", margin: "100px auto 0" }}>
         <div style={{ textAlign: "center", marginBottom: "48px", padding: "0 20px" }}>
           <h2 style={{ fontSize: "clamp(24px, 4vw, 32px)", fontWeight: "800", marginBottom: "12px" }}>See it in action</h2>
-          <p style={{ color: "#6b6b78" }}>This is how Zeropoint transforms a messy syllabus into a clear path.</p>
+          <p style={{ color: "var(--text-3)" }}>This is how Zeropoint transforms a messy syllabus into a clear path.</p>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px", padding: "0 20px" }}>
@@ -88,7 +88,7 @@ export default function Home() {
           {/* Sample Roadmap Preview */}
           <div className="card" style={{ padding: "0", overflow: "hidden", border: "1px solid rgba(124,58,237,0.15)" }}>
             <div style={{ background: "rgba(124,58,237,0.06)", padding: "16px 24px", borderBottom: "1px solid rgba(124,58,237,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: "12px", fontWeight: "800", color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.1em" }}>Generated: Physics 101</span>
+              <span style={{ fontSize: "12px", fontWeight: "800", color: "var(--purple-light)", textTransform: "uppercase", letterSpacing: "0.1em" }}>Generated: Physics 101</span>
               <div className="pulse-dot" />
             </div>
             <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -99,12 +99,12 @@ export default function Home() {
               ].map((item, i) => (
                 <div key={i} style={{ 
                   display: "flex", alignItems: "center", gap: "16px", padding: "12px 14px", 
-                  background: item.status === 'active' ? 'rgba(255,255,255,0.04)' : 'transparent',
-                  borderRadius: "10px", border: item.status === 'active' ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent'
+                  background: item.status === 'active' ? 'rgba(var(--invert-rgb),0.04)' : 'transparent',
+                  borderRadius: "10px", border: item.status === 'active' ? '1px solid rgba(var(--invert-rgb),0.06)' : '1px solid transparent'
                 }}>
-                  <span style={{ fontSize: "10px", fontWeight: "800", color: item.status === 'completed' ? '#4ade80' : '#52525e' }}>{item.day}</span>
-                  <span style={{ fontSize: "13px", fontWeight: "600", flex: 1, color: item.status === 'pending' ? '#3f3f48' : '#fff' }}>{item.title}</span>
-                  <div style={{ width: "16px", height: "16px", borderRadius: "50%", border: item.status === 'completed' ? "none" : "2px solid rgba(255,255,255,0.04)", background: item.status === 'completed' ? "#4ade80" : "transparent" }}></div>
+                  <span style={{ fontSize: "10px", fontWeight: "800", color: item.status === 'completed' ? 'var(--green-light)' : 'var(--text-3)' }}>{item.day}</span>
+                  <span style={{ fontSize: "13px", fontWeight: "600", flex: 1, color: item.status === 'pending' ? 'var(--text-4)' : '#fff' }}>{item.title}</span>
+                  <div style={{ width: "16px", height: "16px", borderRadius: "50%", border: item.status === 'completed' ? "none" : "2px solid rgba(var(--invert-rgb),0.04)", background: item.status === 'completed' ? "var(--green-light)" : "transparent" }}></div>
                 </div>
               ))}
             </div>
@@ -112,11 +112,11 @@ export default function Home() {
 
           {/* Sample AI Tutor Chat */}
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            <div className="card" style={{ padding: "20px", background: "linear-gradient(135deg, #1a1a2e, #16213e)" }}>
+            <div className="card" style={{ padding: "20px", background: "linear-gradient(135deg, var(--bg-raised), var(--bg))" }}>
                <div style={{ display: "flex", gap: "12px", marginBottom: "14px" }}>
                   <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "var(--purple)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "12px" }}>Z</div>
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: "10px", fontWeight: "800", color: "#a78bfa", marginBottom: "4px" }}>AI TUTOR</p>
+                    <p style={{ fontSize: "10px", fontWeight: "800", color: "var(--purple-light)", marginBottom: "4px" }}>AI TUTOR</p>
                     <p style={{ fontSize: "13px", color: "#e0e0e8", lineHeight: "1.5" }}>Think of <strong>Potential Energy</strong> like a stretched rubber band. The energy is "stored" because of its position.</p>
                   </div>
                </div>
@@ -124,7 +124,7 @@ export default function Home() {
             
             <div className="card" style={{ padding: "24px" }}>
                <h3 style={{ fontSize: "14px", fontWeight: "800", marginBottom: "8px" }}>Why it works?</h3>
-               <p style={{ fontSize: "12px", color: "#6b6b78", lineHeight: "1.6" }}>
+               <p style={{ fontSize: "12px", color: "var(--text-3)", lineHeight: "1.6" }}>
                  We break your goal into <strong>Learning Segments</strong> and build a <strong>Memory Map</strong> that ensures you never forget.
                </p>
             </div>
