@@ -171,7 +171,7 @@ export default function ChatPage() {
               transition: "all 0.2s cubic-bezier(0.16,1,0.3,1)",
             }}
           >
-            <span style={{ fontSize: "12px", color: activeId === s.id ? "#e0e0f0" : "var(--text-3)" }}>#</span>
+            <span style={{ fontSize: "12px", color: activeId === s.id ? "var(--text-1)" : "var(--text-3)" }}>#</span>
             {editingId === s.id ? (
               <input
                 autoFocus
@@ -183,7 +183,7 @@ export default function ChatPage() {
                 style={{ flex: 1, background: "rgba(0,0,0,0.2)", border: "1px solid rgba(124,58,237,0.4)", borderRadius: "6px", padding: "2px 8px", fontSize: "12px", color: "var(--text-1)", outline: "none", fontFamily: "inherit" }}
               />
             ) : (
-              <span style={{ flex: 1, fontSize: "12px", color: activeId === s.id ? "#fff" : "var(--text-2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: activeId === s.id ? "600" : "400" }}>
+              <span style={{ flex: 1, fontSize: "12px", color: activeId === s.id ? "var(--text-1)" : "var(--text-2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: activeId === s.id ? "600" : "400" }}>
                 {s.title}
               </span>
             )}
@@ -239,7 +239,7 @@ export default function ChatPage() {
         
         {/* Grounded Top Bar */}
         <div style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px 32px", borderBottom: "1px solid rgba(var(--invert-rgb),0.06)", background: "rgba(0,0,0,0.1)", backdropFilter: "blur(10px)", zIndex: 10 }}>
-          <button onClick={() => setSidebarOpen(o => !o)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-3)", padding: "8px", borderRadius: "8px", display: "flex", transition: "all 0.2s" }} onMouseEnter={e => (e.currentTarget.style.color="#fff")}>
+          <button onClick={() => setSidebarOpen(o => !o)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-3)", padding: "8px", borderRadius: "8px", display: "flex", transition: "all 0.2s" }} onMouseEnter={e => (e.currentTarget.style.color="var(--text-1)")}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
           <div style={{ flex: 1 }}>
@@ -272,10 +272,10 @@ export default function ChatPage() {
             <div style={{ maxWidth: "800px", margin: "0 auto", padding: "40px 32px" }}>
                 {msgs.map((m, i) => (
                     <div key={i} style={{ marginBottom: "40px", display: "flex", gap: "20px" }}>
-                        <div style={{ flexShrink: 0, width: "36px", height: "36px", borderRadius: "12px", background: m.role === 'assistant' ? 'linear-gradient(135deg,var(--purple),#4f46e5)' : '#1a1a1e', display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "800", color: "var(--text-1)", fontSize: "13px" }}>{m.role === 'assistant' ? 'Z' : 'U'}</div>
+                        <div style={{ flexShrink: 0, width: "36px", height: "36px", borderRadius: "12px", background: m.role === 'assistant' ? 'linear-gradient(135deg,var(--purple),#4f46e5)' : 'var(--bg-raised)', display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "800", color: "var(--text-1)", fontSize: "13px" }}>{m.role === 'assistant' ? 'Z' : 'U'}</div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                             <p style={{ fontSize: "12px", fontWeight: "800", color: m.role === 'assistant' ? 'var(--purple-light)' : 'var(--text-3)', marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.1em" }}>{m.role === 'assistant' ? 'Zeropoint Intelligence' : 'You'}</p>
-                            <div style={{ fontSize: "15px", lineHeight: "1.8", color: m.role === 'assistant' ? '#e0e0e0' : '#fff' }}>
+                            <div style={{ fontSize: "15px", lineHeight: "1.8", color: m.role === 'assistant' ? 'var(--text-2)' : 'var(--text-1)' }}>
                                 <ReactMarkdown components={{
                                     h1: ({ children }) => <h2 style={{ fontSize: "20px", fontWeight: "900", color: "var(--text-1)", margin: "32px 0 16px" }}>{children}</h2>,
                                     blockquote: ({ children }) => <div style={{ borderLeft: "4px solid var(--purple)", background: "rgba(124,58,237,0.03)", padding: "16px 20px", borderRadius: "0 12px 12px 0", margin: "24px 0", color: "var(--text-1)", fontStyle: "italic" }}>{children}</div>,

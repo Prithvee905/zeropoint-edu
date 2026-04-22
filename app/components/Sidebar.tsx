@@ -78,7 +78,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                     display: "flex", alignItems: "center", gap: "12px",
                     padding: "12px 16px", borderRadius: "12px",
                     fontSize: "14px", fontWeight: active ? "700" : "500",
-                    color: active ? "#fff" : "var(--text-3)",
+                    color: active ? "var(--text-1)" : "var(--text-3)",
                     background: active ? "rgba(124,58,237,0.15)" : "transparent",
                     transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}

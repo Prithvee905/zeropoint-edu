@@ -103,7 +103,7 @@ export default function Home() {
                   borderRadius: "10px", border: item.status === 'active' ? '1px solid rgba(var(--invert-rgb),0.06)' : '1px solid transparent'
                 }}>
                   <span style={{ fontSize: "10px", fontWeight: "800", color: item.status === 'completed' ? 'var(--green-light)' : 'var(--text-3)' }}>{item.day}</span>
-                  <span style={{ fontSize: "13px", fontWeight: "600", flex: 1, color: item.status === 'pending' ? 'var(--text-4)' : '#fff' }}>{item.title}</span>
+                  <span style={{ fontSize: "13px", fontWeight: "600", flex: 1, color: item.status === 'pending' ? 'var(--text-4)' : 'var(--text-1)' }}>{item.title}</span>
                   <div style={{ width: "16px", height: "16px", borderRadius: "50%", border: item.status === 'completed' ? "none" : "2px solid rgba(var(--invert-rgb),0.04)", background: item.status === 'completed' ? "var(--green-light)" : "transparent" }}></div>
                 </div>
               ))}
@@ -117,7 +117,7 @@ export default function Home() {
                   <div style={{ width: "30px", height: "30px", borderRadius: "8px", background: "var(--purple)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "12px" }}>Z</div>
                   <div style={{ flex: 1 }}>
                     <p style={{ fontSize: "10px", fontWeight: "800", color: "var(--purple-light)", marginBottom: "4px" }}>AI TUTOR</p>
-                    <p style={{ fontSize: "13px", color: "#e0e0e8", lineHeight: "1.5" }}>Think of <strong>Potential Energy</strong> like a stretched rubber band. The energy is "stored" because of its position.</p>
+                    <p style={{ fontSize: "13px", color: "var(--text-1)", lineHeight: "1.5" }}>Think of <strong>Potential Energy</strong> like a stretched rubber band. The energy is "stored" because of its position.</p>
                   </div>
                </div>
             </div>

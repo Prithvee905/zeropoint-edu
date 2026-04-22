@@ -186,7 +186,7 @@ export default function TopicChat({ topicId, topicTitle }: Props) {
                 <div style={{ fontSize: "14px", lineHeight: "1.8", color: "var(--text-1)" }}>
                   <ReactMarkdown components={{
                     h1: ({ children }) => <h2 style={{ fontSize: "17px", fontWeight: "700", color: "var(--purple-light)", margin: "24px 0 12px", letterSpacing: "-0.01em" }}>{children}</h2>,
-                    h2: ({ children }) => <h3 style={{ fontSize: "15px", fontWeight: "600", color: "#e0e0f0", margin: "20px 0 10px" }}>{children}</h3>,
+                    h2: ({ children }) => <h3 style={{ fontSize: "15px", fontWeight: "600", color: "var(--text-1)", margin: "20px 0 10px" }}>{children}</h3>,
                     h3: ({ children }) => <h4 style={{ fontSize: "14px", fontWeight: "600", color: "#d0d0e0", margin: "16px 0 8px" }}>{children}</h4>,
                     p: ({ children }) => <p style={{ margin: "0 0 16px", color: "var(--text-2)" }}>{children}</p>,
                     ul: ({ children }) => <ul style={{ margin: "8px 0 16px", paddingLeft: "18px" }}>{children}</ul>,

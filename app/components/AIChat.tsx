@@ -79,7 +79,7 @@ export default function AIChat({ topicId }: { topicId?: string }) {
               padding: m.role === "user" ? "10px 14px" : "16px 18px",
               borderRadius: m.role === "user" ? "12px 12px 4px 12px" : "4px 12px 12px 12px",
               background: m.role === "user" ? "var(--purple)" : "var(--bg-raised)",
-              color: m.role === "user" ? "#fff" : "#c8c8d4",
+              color: m.role === "user" ? "var(--text-1)" : "var(--text-2)",
               border: m.role === "assistant" ? "1px solid var(--border)" : "none",
               fontSize: "14px", lineHeight: "1.7", fontFamily: "inherit",
             }}>
@@ -91,12 +91,12 @@ export default function AIChat({ topicId }: { topicId?: string }) {
                     components={{
                       h1: ({ children }) => <h1 style={{ fontSize: "17px", fontWeight: "700", color: "#e8e8f0", margin: "0 0 10px", letterSpacing: "-0.02em" }}>{children}</h1>,
                       h2: ({ children }) => <h2 style={{ fontSize: "15px", fontWeight: "600", color: "#d8d8e8", margin: "18px 0 8px", letterSpacing: "-0.01em" }}>{children}</h2>,
-                      h3: ({ children }) => <h3 style={{ fontSize: "14px", fontWeight: "600", color: "#c8c8d8", margin: "14px 0 6px" }}>{children}</h3>,
+                      h3: ({ children }) => <h3 style={{ fontSize: "14px", fontWeight: "600", color: "var(--text-2)", margin: "14px 0 6px" }}>{children}</h3>,
                       p: ({ children }) => <p style={{ margin: "0 0 12px", color: "#a8a8b8", lineHeight: "1.75" }}>{children}</p>,
                       ul: ({ children }) => <ul style={{ margin: "4px 0 12px", paddingLeft: "18px" }}>{children}</ul>,
                       ol: ({ children }) => <ol style={{ margin: "4px 0 12px", paddingLeft: "18px" }}>{children}</ol>,
                       li: ({ children }) => <li style={{ margin: "4px 0", color: "#a8a8b8", lineHeight: "1.65" }}>{children}</li>,
-                      strong: ({ children }) => <strong style={{ color: "#e0e0f0", fontWeight: "600" }}>{children}</strong>,
+                      strong: ({ children }) => <strong style={{ color: "var(--text-1)", fontWeight: "600" }}>{children}</strong>,
                       em: ({ children }) => <em style={{ color: "#b8b8d0", fontStyle: "italic" }}>{children}</em>,
                       code: ({ children }) => (
                         <code style={{

@@ -61,7 +61,7 @@ export default function TopicPage() {
         <div style={{ color: "#a0a0b0", fontSize: "15px", lineHeight: "1.8" }}>
           <ReactMarkdown components={{
             h1: ({ children }) => <h2 style={{ fontSize: "18px", fontWeight: "900", color: "var(--text-1)", marginTop: "32px", marginBottom: "16px" }}>{children}</h2>,
-            h2: ({ children }) => <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#e0e0e8", marginTop: "24px", marginBottom: "12px" }}>{children}</h3>,
+            h2: ({ children }) => <h3 style={{ fontSize: "16px", fontWeight: "800", color: "var(--text-1)", marginTop: "24px", marginBottom: "12px" }}>{children}</h3>,
             h3: ({ children }) => <h4 style={{ fontSize: "14px", fontWeight: "700", color: "#d0d0dc", marginTop: "20px", marginBottom: "10px" }}>{children}</h4>,
             p: ({ children }) => <p style={{ marginBottom: "14px", color: "#9b9ba8" }}>{children}</p>,
             ul: ({ children }) => <ul style={{ paddingLeft: "20px", marginBottom: "16px", display: "flex", flexDirection: "column", gap: "6px" }}>{children}</ul>,

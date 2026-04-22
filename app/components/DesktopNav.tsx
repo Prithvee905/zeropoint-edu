@@ -54,12 +54,12 @@ export default function DesktopNav() {
                     display: "flex", alignItems: "center", gap: "8px",
                     padding: "8px 16px", borderRadius: "99px",
                     fontSize: "13px", fontWeight: active ? "700" : "600",
-                    color: active ? "#fff" : "var(--text-2)",
+                    color: active ? "var(--text-1)" : "var(--text-2)",
                     background: active ? "rgba(124,58,237,0.15)" : "transparent",
                     border: "none", cursor: "pointer",
                     transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
-                onMouseEnter={e => { if (!active) { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(var(--invert-rgb),0.04)" } }}
+                onMouseEnter={e => { if (!active) { e.currentTarget.style.color = "var(--text-1)"; e.currentTarget.style.background = "rgba(var(--invert-rgb),0.04)" } }}
                 onMouseLeave={e => { if (!active) { e.currentTarget.style.color = "var(--text-2)"; e.currentTarget.style.background = "transparent" } }}
                 >
                     <span style={{ color: active ? "var(--purple-light)" : "currentColor" }}>{item.icon}</span>

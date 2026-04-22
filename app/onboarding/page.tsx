@@ -105,7 +105,7 @@ export default function Onboarding() {
             textAlign: "center"
           }}>
             <span style={{ fontSize: "32px", marginBottom: "4px" }}>{file ? "📄" : "☁️"}</span>
-            <span style={{ fontWeight: "800", color: file ? "#fff" : "currentColor" }}>{file ? file.name : "Tap to select your file"}</span>
+            <span style={{ fontWeight: "800", color: file ? "var(--text-1)" : "currentColor" }}>{file ? file.name : "Tap to select your file"}</span>
             <span style={{ fontSize: "11px", opacity: 0.6 }}>{file ? "File linked successfully" : "Analyzing your PDF generates 3x better results"}</span>
             <input type="file" accept="application/pdf" style={{ display: "none" }} onChange={e => setFile(e.target.files?.[0] || null)} />
           </label>

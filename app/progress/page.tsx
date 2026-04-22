@@ -120,7 +120,7 @@ export default function ProgressPage() {
                                 background: h > 0 ? "linear-gradient(180deg, var(--purple-light), var(--purple))" : "rgba(var(--invert-rgb),0.04)", 
                                 borderRadius: "4px", transition: "all 1s cubic-bezier(0.16, 1, 0.3, 1)",
                             }} />
-                            <span style={{ fontSize: "10px", color: h > 0 ? "#fff" : "var(--text-3)", fontWeight: "900" }}>{['M', 'T', 'W', 'T', 'F', 'S', 'S'][i]}</span>
+                            <span style={{ fontSize: "10px", color: h > 0 ? "var(--text-1)" : "var(--text-3)", fontWeight: "900" }}>{['M', 'T', 'W', 'T', 'F', 'S', 'S'][i]}</span>
                         </div>
                     ))}
                 </div>

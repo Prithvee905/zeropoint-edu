@@ -184,7 +184,7 @@ export default function FlashcardsPage() {
                             padding: "5px 14px", borderRadius: "6px",
                             background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.15)",
                         }}>Question</span>
-                        <p style={{ fontSize: "20px", fontWeight: "600", color: "#e0e0f0", lineHeight: "1.5" }}>
+                        <p style={{ fontSize: "20px", fontWeight: "600", color: "var(--text-1)", lineHeight: "1.5" }}>
                             {card.front}
                         </p>
                         <p style={{ position: "absolute", bottom: "20px", fontSize: "11px", color: "var(--text-4)" }}>
@@ -217,7 +217,7 @@ export default function FlashcardsPage() {
                             padding: "5px 14px", borderRadius: "6px",
                             background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.15)",
                         }}>Answer</span>
-                        <p style={{ fontSize: "17px", fontWeight: "500", color: "#c8c8d8", lineHeight: "1.7" }}>
+                        <p style={{ fontSize: "17px", fontWeight: "500", color: "var(--text-2)", lineHeight: "1.7" }}>
                             {card.back}
                         </p>
                     </div>

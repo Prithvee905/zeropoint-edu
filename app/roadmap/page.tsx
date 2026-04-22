@@ -82,7 +82,7 @@ export default function RoadmapPage() {
                 }}>
                   <div style={{ flex: 1 }}>
                     <span style={{ fontSize: "10px", fontWeight: "900", color: "var(--purple-light)", textTransform: "uppercase", letterSpacing: "0.15em" }}>Day {t.day_number}</span>
-                    <h3 style={{ fontSize: "16px", fontWeight: "800", color: t.status === 'pending' ? 'var(--text-3)' : '#fff', marginTop: "6px", lineHeight: "1.4" }}>{t.title}</h3>
+                    <h3 style={{ fontSize: "16px", fontWeight: "800", color: t.status === 'pending' ? 'var(--text-3)' : 'var(--text-1)', marginTop: "6px", lineHeight: "1.4" }}>{t.title}</h3>
                   </div>
                   
                   <div className="card-actions" style={{ display: "flex", alignItems: "center", gap: "12px" }}>

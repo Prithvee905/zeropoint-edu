@@ -95,7 +95,7 @@ export default function TodayTasks() {
               }}>
                 {t.done && <svg width="8" height="8" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" fill="none" stroke="var(--green-light)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
               </div>
-              <span style={{ fontSize: "13px", color: t.done ? "var(--text-3)" : "#c8c8d4", textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
+              <span style={{ fontSize: "13px", color: t.done ? "var(--text-3)" : "var(--text-2)", textDecoration: t.done ? "line-through" : "none" }}>{t.text}</span>
             </li>
           ))}
         </ul>
