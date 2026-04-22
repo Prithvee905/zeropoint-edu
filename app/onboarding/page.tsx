@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { supabase } from "@/lib/supabase"
 
 export default function Onboarding() {
   const router = useRouter()
@@ -27,6 +28,12 @@ export default function Onboarding() {
       const d = await r.json()
       if (d.success) { 
         localStorage.setItem("activeRoadmapId", d.roadmapId)
+        
+        const { data: userAuth } = await supabase.auth.getUser()
+        if (userAuth?.user) {
+            await supabase.auth.updateUser({ data: { activeRoadmapId: d.roadmapId } })
+        }
+
         setTimeout(() => router.push("/dashboard"), 1500)
       }
       else {

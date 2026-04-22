@@ -21,15 +21,26 @@ export default function AuthModal({ isOpen, onClose }: { isOpen: boolean; onClos
 
         try {
             if (isLogin) {
-                const { error } = await supabase.auth.signInWithPassword({ email, password })
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password })
                 if (error) throw error
+                
+                if (data.user?.user_metadata?.activeRoadmapId) {
+                    localStorage.setItem("activeRoadmapId", data.user.user_metadata.activeRoadmapId)
+                }
+                
                 onClose()
                 router.refresh()
             } else {
+                const localId = localStorage.getItem("activeRoadmapId")
+                const md = localId ? { activeRoadmapId: localId } : {}
+                
                 const { error } = await supabase.auth.signUp({ 
                     email, 
                     password,
-                    options: { emailRedirectTo: `${window.location.origin}/auth/callback` }
+                    options: { 
+                        data: md,
+                        emailRedirectTo: `${window.location.origin}/auth/callback` 
+                    }
                 })
                 if (error) throw error
                 setMessage("Success! Check your email for the confirmation link.")
