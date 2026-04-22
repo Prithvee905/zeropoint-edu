@@ -68,7 +68,7 @@ export default function QuizHub() {
             </div>
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "16px" }} className="stagger">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }} className="stagger">
           {topics.map(t => {
             const hasLesson = !!t.ai_summary
             const done = t.status === "completed"

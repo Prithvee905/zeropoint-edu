@@ -86,7 +86,7 @@ export default function ProgressPage() {
       </div>
 
       {/* Main Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
         
         {/* Left Column: Visual Charts & Topics */}
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -192,12 +192,6 @@ export default function ProgressPage() {
 
       </div>
 
-      <style>{`
-        @media (max-width: 768px) {
-            .mobile-stack { flex-direction: column !important; align-items: flex-start !important; }
-            .mobile-full-width-text { text-align: left !important; margin-top: 8px; }
-        }
-      `}</style>
     </div>
   )
 }

@@ -109,22 +109,6 @@ export default function RoadmapPage() {
         </div>
       )}
 
-      <style>{`
-        @media (max-width: 768px) {
-            .roadmap-card { 
-                flex-direction: column !important; 
-                align-items: flex-start !important; 
-                gap: 20px !important; 
-                padding: 20px !important;
-            }
-            .card-actions { 
-                width: 100% !important; 
-                justify-content: flex-start !important; 
-                flex-direction: row !important;
-            }
-            .card-actions button { flex: 1 !important; text-align: center !important; }
-        }
-      `}</style>
     </div>
   )
 }

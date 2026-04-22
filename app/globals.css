@@ -272,3 +272,52 @@ a { transition: color 0.15s, opacity 0.15s; }
 
 /* ─── Selection ─────────────────────────────────────────────────── */
 ::selection { background: rgba(124,58,237,0.3); color: #f0f0f4; }
+
+/* ─── Component Overrides (Moved from inline <style> for iOS Safari compatibility) ────────────── */
+@media (max-width: 768px) {
+  /* Layout */
+  .mobile-only-flex { display: flex !important; }
+  .sidebar-body { transform: translateX(-100%); }
+  .is-open .sidebar-body { transform: translateX(0); }
+  .main-content-area { padding-top: calc(64px + env(safe-area-inset-top)) !important; }
+  .responsive-container { padding: 32px 20px 80px !important; }
+  .card-interactive:hover { transform: none !important; }
+  
+  /* Sidebar */
+  .mobile-close-btn { display: flex !important; }
+  .nav-item { padding: 14px 20px !important; font-size: 15px !important; }
+
+  /* Page */
+  .mobile-full-width button { width: 100% !important; }
+  .hero-title { line-height: 1.2 !important; }
+
+  /* Dashboard / Shared */
+  .mobile-stack { flex-direction: column !important; align-items: flex-start !important; }
+  .mobile-full-width { width: 100% !important; text-align: center !important; }
+  .resume-card { padding: 24px !important; }
+  
+  /* Progress */
+  .mobile-full-width-text { text-align: left !important; margin-top: 8px; }
+
+  /* Roadmap */
+  .roadmap-card { flex-direction: column !important; align-items: flex-start !important; gap: 20px !important; padding: 20px !important; }
+  .card-actions { width: 100% !important; justify-content: flex-start !important; flex-direction: row !important; }
+  .card-actions button { flex: 1 !important; text-align: center !important; }
+}
+
+@media (min-width: 769px) {
+  .sidebar-body { position: sticky !important; transform: none !important; }
+  .sidebar-backdrop { display: none !important; }
+  .sidebar-root { position: relative !important; }
+}
+
+@media (max-width: 480px) {
+  /* AuthModal */
+  .auth-modal-content { padding: 40px 24px !important; }
+  .auth-modal-card { border-radius: 24px !important; }
+  
+  /* Onboarding */
+  .onboarding-form-card { padding: 32px 20px !important; }
+}
+
+.mobile-only-flex { display: none; }

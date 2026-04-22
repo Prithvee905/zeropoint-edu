@@ -97,19 +97,11 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Unified List Grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "28px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "28px" }}>
         <TodayTasks />
         <Streak />
       </div>
 
-      <style>{`
-        @media (max-width: 768px) {
-            .mobile-stack { flex-direction: column !important; align-items: flex-start !important; }
-            .mobile-full-width { width: 100% !important; text-align: center !important; }
-            .resume-card { padding: 24px !important; }
-        }
-      `}</style>
     </div>
   )
 }

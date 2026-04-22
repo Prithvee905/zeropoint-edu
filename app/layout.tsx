@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover"/> 
       </head>
-      <body style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "var(--bg)", margin: 0, padding: 0 }}>
+      <body style={{ fontFamily: "'Inter', system-ui, sans-serif", background: "var(--bg)", margin: 0, padding: 0, overflowX: "hidden" }}>
         <AuthProvider>
           <NavProgress />
           
@@ -100,30 +100,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </main>
             </div>
           </div>
-        </AuthProvider>
-
-        <style>{`
-          /* Mobile Overrides (iOS/Android) */
-          @media (max-width: 768px) {
-            .mobile-only-flex { display: flex !important; }
-            .sidebar-body { transform: translateX(-100%); }
-            .is-open .sidebar-body { transform: translateX(0); }
-            .main-content-area { padding-top: calc(64px + env(safe-area-inset-top)) !important; }
-            .responsive-container { padding: 32px 20px 80px !important; }
-            
-            /* Disable hover effects on touch */
-            .card-interactive:hover { transform: none !important; }
-          }
-          
-          /* Desktop Logic */
-          @media (min-width: 769px) {
-            .sidebar-body { position: sticky !important; transform: none !important; }
-            .sidebar-backdrop { display: none !important; }
-            .sidebar-root { position: relative !important; }
-          }
-
-          .mobile-only-flex { display: none; }
-        `}</style>
       </body>
     </html>
   )

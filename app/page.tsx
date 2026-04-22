@@ -83,7 +83,7 @@ export default function Home() {
           <p style={{ color: "#6b6b78" }}>This is how Zeropoint transforms a messy syllabus into a clear path.</p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px", padding: "0 20px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px", padding: "0 20px" }}>
           
           {/* Sample Roadmap Preview */}
           <div className="card" style={{ padding: "0", overflow: "hidden", border: "1px solid rgba(124,58,237,0.15)" }}>
@@ -133,12 +133,6 @@ export default function Home() {
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 768px) {
-            .mobile-full-width button { width: 100% !important; }
-            .hero-title { line-height: 1.2 !important; }
-        }
-      `}</style>
     </div>
   )
 }
