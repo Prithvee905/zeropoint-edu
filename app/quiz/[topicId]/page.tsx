@@ -96,17 +96,17 @@ export default function QuizPage() {
         <p style={{ fontSize: "11px", fontWeight: "600", color: "var(--purple)", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "12px" }}>
           Question {idx + 1} of {qs.length}
         </p>
-        <h2 style={{ fontSize: "16px", fontWeight: "600", color: "#e8e8f0", lineHeight: "1.5", marginBottom: "24px" }}>{q.question}</h2>
+        <h2 style={{ fontSize: "16px", fontWeight: "600", color: "var(--text-1)", lineHeight: "1.5", marginBottom: "24px" }}>{q.question}</h2>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           {q.options.map((opt, i) => {
-            let bg = "rgba(var(--invert-rgb),0.02)", border = "var(--border)", color = "#b0b0c0"
+            let bg = "rgba(var(--invert-rgb),0.02)", border = "var(--border)", color = "var(--text-2)"
             if (checked) {
               if (i === q.correctAnswer) { bg = "rgba(22,163,74,0.08)"; border = "rgba(22,163,74,0.25)"; color = "var(--green-light)" }
               else if (i === sel) { bg = "rgba(248,113,113,0.08)"; border = "rgba(248,113,113,0.25)"; color = "#f87171" }
               else color = "var(--text-4)"
             } else if (sel === i) {
-              bg = "rgba(124,58,237,0.1)"; border = "rgba(124,58,237,0.3)"; color = "#c4b5fd"
+              bg = "rgba(124,58,237,0.1)"; border = "rgba(124,58,237,0.3)"; color = "var(--purple)"
             }
             return (
               <button key={i} disabled={checked} onClick={() => setSel(i)} style={{

@@ -320,6 +320,15 @@ a { transition: color 0.15s, opacity 0.15s; }
   .mobile-full-width button { width: 100% !important; }
   .hero-title { line-height: 1.2 !important; }
 
+  /* Chat System */
+  .chat-sidebar {
+    position: absolute;
+    left: 0;
+    z-index: 1000;
+    height: 100%;
+    box-shadow: 20px 0 60px rgba(0,0,0,0.4);
+  }
+
   /* Dashboard / Shared */
   .mobile-stack { flex-direction: column !important; align-items: flex-start !important; }
   .mobile-full-width { width: 100% !important; text-align: center !important; }

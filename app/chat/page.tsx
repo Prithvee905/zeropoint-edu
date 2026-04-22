@@ -197,7 +197,7 @@ export default function ChatPage() {
     <div style={{ display: "flex", height: "calc(100vh - 80px)", minHeight: "600px", gap: "0", margin: "-40px -48px", overflow: "hidden" }}>
 
       {/* ── LEFT SIDEBAR ── */}
-      <div style={{
+      <div className="chat-sidebar" style={{
         width: sidebarOpen ? "280px" : "0px",
         minWidth: sidebarOpen ? "280px" : "0px",
         background: "var(--bg)",

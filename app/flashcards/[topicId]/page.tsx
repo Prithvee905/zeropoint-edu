@@ -169,13 +169,13 @@ export default function FlashcardsPage() {
                         position: "absolute", inset: 0,
                         backfaceVisibility: "hidden",
                         borderRadius: "20px",
-                        background: "linear-gradient(145deg, var(--bg-raised) 0%, #16162a 100%)",
+                        background: "var(--bg-raised)",
                         border: "1px solid rgba(124,58,237,0.15)",
                         display: "flex", flexDirection: "column",
                         alignItems: "center", justifyContent: "center",
                         padding: "40px 32px",
                         textAlign: "center",
-                        boxShadow: "0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(var(--invert-rgb),0.05)",
+                        boxShadow: "0 20px 60px rgba(0,0,0,0.1), inset 0 1px 0 rgba(var(--invert-rgb),0.05)",
                     }}>
                         <span style={{
                             fontSize: "10px", fontWeight: "700", color: "var(--purple)",
@@ -198,13 +198,13 @@ export default function FlashcardsPage() {
                         backfaceVisibility: "hidden",
                         transform: "rotateY(180deg)",
                         borderRadius: "20px",
-                        background: "linear-gradient(145deg, #1e1035 0%, #0f0f1a 100%)",
+                        background: "var(--bg-raised)",
                         border: "1px solid rgba(124,58,237,0.25)",
                         display: "flex", flexDirection: "column",
                         alignItems: "center", justifyContent: "center",
                         padding: "40px 32px",
                         textAlign: "center",
-                        boxShadow: "0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(124,58,237,0.08)",
+                        boxShadow: "0 20px 60px rgba(0,0,0,0.1), 0 0 40px rgba(124,58,237,0.08)",
                         overflow: "hidden",
                     }}>
                         {/* Subtle top glow */}
