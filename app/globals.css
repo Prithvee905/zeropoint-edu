@@ -309,7 +309,7 @@ a { transition: color 0.15s, opacity 0.15s; }
   .sidebar-body { transform: translateX(-100%); }
   .is-open .sidebar-body { transform: translateX(0); }
   .main-content-area { padding-top: calc(64px + env(safe-area-inset-top)) !important; }
-  .responsive-container { padding: 32px 20px 80px !important; }
+  .responsive-container { padding: 32px 0 80px !important; }
   .card-interactive:hover { transform: none !important; }
   
   /* Sidebar */

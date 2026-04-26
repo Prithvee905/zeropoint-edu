@@ -23,7 +23,7 @@ export default function SettingsPage() {
     )
 
     return (
-        <div className="fade-up" style={{ maxWidth: "800px", margin: "0 auto", paddingBottom: "60px" }}>
+        <div className="fade-up" style={{ maxWidth: "800px", margin: "0 auto", padding: "0 20px 60px" }}>
             <div style={{ marginBottom: "40px" }} className="mobile-header-spacing">
                 <h1 style={{ fontSize: "clamp(2rem, 5vw, 2.8rem)", fontWeight: "900", letterSpacing: "-0.04em", marginBottom: "12px", color: "var(--text-1)" }}>Profile & Settings</h1>
                 <p style={{ fontSize: "15px", color: "var(--text-3)", fontWeight: "500" }}>Manage your account, appearance, and study preferences.</p>

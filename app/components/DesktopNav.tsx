@@ -29,7 +29,7 @@ export default function DesktopNav() {
       zIndex: 900, display: "flex", justifyContent: "center"
     }}>
       <div style={{
-          width: "100%", maxWidth: "1280px", padding: "0 60px",
+          width: "100%", padding: "0 24px",
           display: "flex", alignItems: "center", justifyContent: "space-between"
       }}>
           {/* Logo */}
