@@ -31,15 +31,15 @@ export default function Home() {
         <h1 style={{ 
             fontSize: "clamp(2.5rem, 8vw, 4.2rem)", 
             fontWeight: "900", letterSpacing: "-0.05em", lineHeight: "1.1", 
-            marginBottom: "24px", maxWidth: "1200px", color: "var(--text-1)" 
-        }} className="hero-title">
+            marginBottom: "24px", color: "var(--text-1)" 
+        }} className="hero-title hero-title-container">
           Forget random study.<br />
           <span style={{ background: "linear-gradient(135deg, var(--purple-light), #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
             Master your future.
           </span>
         </h1>
 
-        <p style={{ fontSize: "clamp(16px, 2vw, 18px)", color: "var(--text-2)", maxWidth: "800px", lineHeight: "1.7", marginBottom: "40px", fontWeight: "400" }}>
+        <p style={{ fontSize: "clamp(16px, 2vw, 18px)", color: "var(--text-2)", lineHeight: "1.7", marginBottom: "40px", fontWeight: "400" }} className="hero-paragraph-container">
           Upload your syllabus or goal. Zeropoint builds a custom roadmap, tutors you through every concept, and prepares you for mastery.
         </p>
 
@@ -61,7 +61,7 @@ export default function Home() {
         </div>
 
         {/* Feature Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px", width: "100%", margin: "0 auto", padding: "0 40px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px", width: "100%", margin: "0 auto" }} className="feature-grid-container">
           {[
             { icon: "✨", title: "Precision Roadmap", desc: "Day-by-day segments generated from your specific PDF or goal." },
             { icon: "🎓", title: "Personal AI Tutor", desc: "Stuck on a concept? Your tutor knows your syllabus inside out." },
@@ -77,7 +77,7 @@ export default function Home() {
       </div>
 
       {/* NEW: Tangible Product Demo Artifact */}
-      <div className="fade-up" style={{ width: "100%", margin: "100px auto 0", padding: "0 40px" }}>
+      <div className="fade-up demo-section-container" style={{ width: "100%", margin: "100px auto 0" }}>
         <div style={{ textAlign: "center", marginBottom: "48px", padding: "0 20px" }}>
           <h2 style={{ fontSize: "clamp(24px, 4vw, 32px)", fontWeight: "800", marginBottom: "12px" }}>See it in action</h2>
           <p style={{ color: "var(--text-3)" }}>This is how Zeropoint transforms a messy syllabus into a clear path.</p>

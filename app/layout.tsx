@@ -73,7 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </div>
 
                 <main style={{ flex: 1, minHeight: "100vh", overflowX: "hidden", width: "100%" }} className="main-content-area">
-                    <div style={{ width: "100%", padding: "40px 0 80px" }} className="responsive-container">
+                    <div className="responsive-container">
                         <PageTransition>
                             {children}
                         </PageTransition>
