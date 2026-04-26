@@ -330,7 +330,12 @@ a { transition: color 0.15s, opacity 0.15s; }
     left: 0;
     z-index: 1000;
     height: 100%;
+    width: 0;
     box-shadow: 20px 0 60px rgba(0,0,0,0.4);
+    transition: width 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .chat-sidebar.is-sidebar-open {
+    width: 100% !important;
   }
 
   /* Dashboard / Shared */
@@ -347,6 +352,17 @@ a { transition: color 0.15s, opacity 0.15s; }
   .card-actions button { flex: 1 !important; text-align: center !important; }
 }
 
+
+
+@media (max-width: 480px) {
+  /* AuthModal */
+  .auth-modal-content { padding: 40px 24px !important; }
+  .auth-modal-card { border-radius: 24px !important; }
+  
+  /* Onboarding */
+  .onboarding-form-card { padding: 32px 20px !important; }
+}
+
 @media (min-width: 769px) {
   /* Hide Mobile Sidebar entirely on Desktop */
   .sidebar-root { display: none !important; }
@@ -357,15 +373,17 @@ a { transition: color 0.15s, opacity 0.15s; }
   .hero-paragraph-container { maxWidth: 800px; margin: 0 auto; }
   .feature-grid-container { padding: 0; }
   .demo-section-container { padding: 0; }
-}
 
-@media (max-width: 480px) {
-  /* AuthModal */
-  .auth-modal-content { padding: 40px 24px !important; }
-  .auth-modal-card { border-radius: 24px !important; }
-  
-  /* Onboarding */
-  .onboarding-form-card { padding: 32px 20px !important; }
+  /* Chat Sidebar Desktop */
+  .chat-sidebar {
+    position: relative;
+    width: 0;
+    transition: width 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .chat-sidebar.is-sidebar-open {
+    width: 280px !important;
+    min-width: 280px;
+  }
 }
 
 .mobile-only-flex { display: none; }

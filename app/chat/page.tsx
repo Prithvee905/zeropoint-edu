@@ -65,6 +65,7 @@ export default function ChatPage() {
     const d = await r.json()
     setMsgs((d.messages || []).map((m: any) => ({ id: m.id, role: m.role, content: m.content })))
     setLoadingSession(false)
+    if (window.innerWidth < 768) setSidebarOpen(false)
   }
 
   const newChat = async () => {
@@ -205,9 +206,7 @@ export default function ChatPage() {
     <div style={{ display: "flex", height: "calc(100vh - 80px)", minHeight: "600px", gap: "0", margin: "-40px -48px", overflow: "hidden" }}>
 
       {/* ── LEFT SIDEBAR ── */}
-      <div className="chat-sidebar" style={{
-        width: sidebarOpen ? "280px" : "0px",
-        minWidth: sidebarOpen ? "280px" : "0px",
+      <div className={`chat-sidebar ${sidebarOpen ? 'is-sidebar-open' : ''}`} style={{
         background: "var(--bg)",
         borderRight: "1px solid rgba(var(--invert-rgb),0.06)",
         display: "flex", flexDirection: "column",
@@ -246,7 +245,16 @@ export default function ChatPage() {
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", background: "var(--bg)" }}>
         
         {/* Grounded Top Bar */}
-        <div style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px 32px", borderBottom: "1px solid rgba(var(--invert-rgb),0.06)", background: "rgba(0,0,0,0.1)", backdropFilter: "blur(10px)", zIndex: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px 20px", borderBottom: "1px solid rgba(var(--invert-rgb),0.06)", background: "rgba(0,0,0,0.1)", backdropFilter: "blur(10px)", zIndex: 10 }}>
+          {activeId && (
+            <button 
+                className="mobile-only-flex"
+                onClick={() => { setActiveId(null); setSidebarOpen(true); }}
+                style={{ background: "rgba(var(--invert-rgb),0.05)", border: "none", color: "var(--text-1)", padding: "8px 12px", borderRadius: "10px", fontSize: "12px", fontWeight: "700", display: "none", alignItems: "center", gap: "6px" }}
+            >
+                ← Back
+            </button>
+          )}
           <button onClick={() => setSidebarOpen(o => !o)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-3)", padding: "8px", borderRadius: "8px", display: "flex", transition: "all 0.2s" }} onMouseEnter={e => (e.currentTarget.style.color="var(--text-1)")}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </button>
