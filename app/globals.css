@@ -314,6 +314,7 @@ a { transition: color 0.15s, opacity 0.15s; }
   .hero-paragraph-container { maxWidth: 540px; margin: 0 auto; }
   .feature-grid-container { padding: 0 20px; }
   .demo-section-container { padding: 0 20px; }
+  .chat-page-wrapper { margin: -32px -20px -80px; height: calc(100dvh - 64px); }
   .card-interactive:hover { transform: none !important; }
   
   /* Sidebar */
@@ -384,6 +385,7 @@ a { transition: color 0.15s, opacity 0.15s; }
     width: 280px !important;
     min-width: 280px;
   }
+  .chat-page-wrapper { margin: -40px 0 -80px; height: calc(100vh - 72px); }
 }
 
 .mobile-only-flex { display: none; }

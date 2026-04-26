@@ -131,11 +131,6 @@ export default function Onboarding() {
 
       </div>
 
-      <style>{`
-        @media (max-width: 480px) {
-            .onboarding-form-card { padding: 32px 20px !important; }
-        }
-      `}</style>
     </div>
   )
 }
