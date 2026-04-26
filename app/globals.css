@@ -63,6 +63,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  touch-action: manipulation;
+  user-select: none;
 
   /* Smooth everything by default */
   transition: background 0.3s, color 0.3s;

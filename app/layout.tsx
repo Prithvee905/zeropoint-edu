@@ -21,6 +21,40 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     setIsSidebarOpen(false)
   }, [pathname])
 
+  // Disable zooming
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) ||
+        (e.metaKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0'))
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+      }
+    };
+
+    const handleTouch = (e: TouchEvent) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouch, { passive: false });
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouch);
+    };
+  }, []);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
